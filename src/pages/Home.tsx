@@ -3,15 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-// Import portfolio images
-import coposPersonalizados from '@/assets/portfolio/copos-personalizados.jpg';
-import materialCorporativo from '@/assets/portfolio/material-corporativo.jpg';
-import cadernosTpa from '@/assets/portfolio/cadernos-tpa.jpg';
-import kitAgt from '@/assets/portfolio/kit-agt.jpg';
-import camisetasBic from '@/assets/portfolio/camisetas-bic.jpg';
-import cordoesContinental from '@/assets/portfolio/cordoes-continental.jpg';
-import cadernosWomen from '@/assets/portfolio/cadernos-women.jpg';
-import standsMojogos from '@/assets/portfolio/stands-mojogos.jpg';
+// Images are now referenced directly in the components
 
 // Floating animated shapes component
 const FloatingShapes = () => {
@@ -73,6 +65,15 @@ const HeroSection = () => {
       {/* Background Elements */}
       <div className="absolute top-1/4 right-10 w-64 h-64 bg-ns-blue/15 rounded-full blur-[100px] animate-pulse-slow" />
       <div className="absolute bottom-1/4 left-10 w-48 h-48 bg-ns-cyan/20 rounded-full blur-[80px] animate-float" />
+      
+      {/* Background Image Hero */}
+      <div className="absolute inset-0 z-0 opacity-10">
+        <img 
+          src="/dgueth/img11.png" 
+          alt="Dgeth Gráfica Background" 
+          className="w-full h-full object-cover grayscale blur-sm"
+        />
+      </div>
       
       {/* Floating animated shapes */}
       <FloatingShapes />
@@ -228,7 +229,16 @@ const BrandsMarquee = () => {
           </div>
           
           <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 stagger-parent ${isVisible ? 'animate-active' : ''}`}>
-            {[coposPersonalizados, materialCorporativo, cadernosTpa, kitAgt, camisetasBic, standsMojogos].map((img, idx) => (
+            {[
+              "/dgueth/img6.png", 
+              "/dgueth/img1.jpeg", 
+              "/dgueth/img2.png", 
+              "/dgueth/img3.png", 
+              "/dgueth/img4.png", 
+              "/dgueth/img5.png",
+              "/dgueth/img12.png",
+              "/dgueth/img13.png"
+            ].map((img, idx) => (
               <div 
                 key={idx} 
                 className="stagger-item group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
@@ -337,10 +347,13 @@ const PortfolioTeaser = () => {
   const { ref, isVisible } = useScrollAnimation();
   
   const items = [
-    { id: 1, title: 'TECSEP Kit Corporativo', cat: 'Material Promocional', img: materialCorporativo },
-    { id: 2, title: 'Cadernos TPA', cat: 'Editorial', img: cadernosTpa },
-    { id: 3, title: 'Kit AGT', cat: 'Embalagem', img: kitAgt },
-    { id: 4, title: 'Stands Mô Jogos', cat: 'Comunicação Visual', img: standsMojogos },
+    { id: 1, title: 'TECSEP Kit Corporativo', cat: 'Material Promocional', img: "/dgueth/img1.jpeg", gridClass: "md:col-span-2 md:row-span-2" },
+    { id: 2, title: 'Cadernos TPA', cat: 'Editorial', img: "/dgueth/img2.png", gridClass: "md:col-span-1 md:row-span-1" },
+    { id: 3, title: 'Kit AGT', cat: 'Embalagem', img: "/dgueth/img3.png", gridClass: "md:col-span-1 md:row-span-2" },
+    { id: 4, title: 'Stands Mô Jogos', cat: 'Comunicação Visual', img: "/dgueth/img5.png", gridClass: "md:col-span-1 md:row-span-1" },
+    { id: 5, title: 'Camisetas BIC', cat: 'Branding', img: "/dgueth/img4.png", gridClass: "md:col-span-2 md:row-span-1" },
+    { id: 6, title: 'Cordões Continental', cat: 'Acessórios', img: "/dgueth/img7.png", gridClass: "md:col-span-1 md:row-span-1" },
+    { id: 7, title: 'Cadernos Women', cat: 'Editorial', img: "/dgueth/img8.png", gridClass: "md:col-span-1 md:row-span-1" },
   ];
 
   return (
@@ -370,11 +383,11 @@ const PortfolioTeaser = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[250px] sm:auto-rows-[300px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 auto-rows-[250px] md:auto-rows-[220px]">
           {items.map((item, i) => (
             <div
               key={item.id}
-              className={`group relative overflow-hidden rounded-lg cursor-pointer bg-slate-800 scroll-animate-init reveal-mask-up ${isVisible ? 'animate-active' : ''} ${i === 0 || i === 3 ? 'sm:col-span-2 lg:col-span-2' : ''}`}
+              className={`group relative overflow-hidden rounded-xl cursor-pointer bg-slate-800 scroll-animate-init reveal-mask-up ${isVisible ? 'animate-active' : ''} ${item.gridClass}`}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
               <img
@@ -384,8 +397,8 @@ const PortfolioTeaser = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
               <div className="absolute bottom-0 left-0 p-6 sm:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out-back">
-                <span className="text-ns-cyan text-xs font-bold uppercase tracking-widest mb-2 block">{item.cat}</span>
-                <h3 className="text-xl sm:text-2xl font-display font-bold text-white group-hover:text-ns-yellow transition-colors">{item.title}</h3>
+                <span className="text-ns-cyan text-xs font-bold uppercase tracking-widest mb-1 block">{item.cat}</span>
+                <h3 className="text-lg sm:text-xl font-display font-bold text-white group-hover:text-ns-yellow transition-colors leading-tight">{item.title}</h3>
               </div>
             </div>
           ))}
@@ -487,7 +500,7 @@ const DifferentialsSection = () => {
             <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-ns-blue rounded-2xl transform rotate-3 animate-float-random opacity-20" />
             <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-slate-900 rounded-2xl transform -rotate-2 overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-0 hover:scale-105">
               <img
-                src="https://images.unsplash.com/photo-1586717791821-3f44a5638d0f?q=80&w=800&auto=format&fit=crop"
+                src="/dgueth/img9.png"
                 className="w-full h-full object-cover opacity-80"
                 alt="Qualidade NS"
               />

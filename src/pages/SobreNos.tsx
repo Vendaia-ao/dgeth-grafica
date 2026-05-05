@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import materialCorporativo from '@/assets/portfolio/material-corporativo.jpg';
-import cadernosTpa from '@/assets/portfolio/cadernos-tpa.jpg';
-import kitAgt from '@/assets/portfolio/kit-agt.jpg';
+// Use images from /dgueth
+const materialCorporativo = "/dgueth/img1.jpeg";
+const cadernosTpa = "/dgueth/img2.png";
+const kitAgt = "/dgueth/img3.png";
 
 const values = [
   {

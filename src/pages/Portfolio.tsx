@@ -2,73 +2,20 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-// Import portfolio images
-import coposPersonalizados from '@/assets/portfolio/copos-personalizados.jpg';
-import materialCorporativo from '@/assets/portfolio/material-corporativo.jpg';
-import cadernosTpa from '@/assets/portfolio/cadernos-tpa.jpg';
-import kitAgt from '@/assets/portfolio/kit-agt.jpg';
-import camisetasBic from '@/assets/portfolio/camisetas-bic.jpg';
-import cordoesContinental from '@/assets/portfolio/cordoes-continental.jpg';
-import cadernosWomen from '@/assets/portfolio/cadernos-women.jpg';
-import standsMojogos from '@/assets/portfolio/stands-mojogos.jpg';
-
 const projects = [
-  {
-    id: 1,
-    title: 'Material Corporativo',
-    category: 'Branding',
-    image: materialCorporativo,
-    client: 'TECSEP',
-  },
-  {
-    id: 2,
-    title: 'Cadernos Personalizados',
-    category: 'Editorial',
-    image: cadernosTpa,
-    client: 'TPA',
-  },
-  {
-    id: 3,
-    title: 'Kit Corporativo',
-    category: 'Embalagem',
-    image: kitAgt,
-    client: 'AGT',
-  },
-  {
-    id: 4,
-    title: 'Camisetas Personalizadas',
-    category: 'Branding',
-    image: camisetasBic,
-    client: 'BIC',
-  },
-  {
-    id: 5,
-    title: 'Stands Promocionais',
-    category: 'Sinalização',
-    image: standsMojogos,
-    client: 'Mô Jogos',
-  },
-  {
-    id: 6,
-    title: 'Cordões Personalizados',
-    category: 'Branding',
-    image: cordoesContinental,
-    client: 'Continental',
-  },
-  {
-    id: 7,
-    title: 'Cadernos Premium',
-    category: 'Editorial',
-    image: cadernosWomen,
-    client: 'Women',
-  },
-  {
-    id: 8,
-    title: 'Copos Personalizados',
-    category: 'Embalagem',
-    image: coposPersonalizados,
-    client: 'Cliente Premium',
-  },
+  { id: 1, title: 'Material Corporativo', category: 'Branding', image: "/dgueth/img1.jpeg", client: 'TECSEP' },
+  { id: 2, title: 'Cadernos Personalizados', category: 'Editorial', image: "/dgueth/img2.png", client: 'TPA' },
+  { id: 3, title: 'Kit Corporativo', category: 'Embalagem', image: "/dgueth/img3.png", client: 'AGT' },
+  { id: 4, title: 'Camisetas Personalizadas', category: 'Branding', image: "/dgueth/img4.png", client: 'BIC' },
+  { id: 5, title: 'Stands Promocionais', category: 'Sinalização', image: "/dgueth/img5.png", client: 'Mô Jogos' },
+  { id: 6, title: 'Cordões Personalizados', category: 'Branding', image: "/dgueth/img7.png", client: 'Continental' },
+  { id: 7, title: 'Cadernos Premium', category: 'Editorial', image: "/dgueth/img8.png", client: 'Women' },
+  { id: 8, title: 'Copos Personalizados', category: 'Embalagem', image: "/dgueth/img6.png", client: 'Cliente Premium' },
+  { id: 9, title: 'Design de Identidade', category: 'Design', image: "/dgueth/img9.png", client: 'Novo Cliente' },
+  { id: 10, title: 'Material Publicitário', category: 'Branding', image: "/dgueth/img10.png", client: 'Luanda Corp' },
+  { id: 11, title: 'Brindes Exclusivos', category: 'Brindes', image: "/dgueth/img11.png", client: 'Eventos Pro' },
+  { id: 12, title: 'Comunicação Visual', category: 'Sinalização', image: "/dgueth/img12.png", client: 'Shopping Center' },
+  { id: 13, title: 'Frota Personalizada', category: 'Frota', image: "/dgueth/img13.png", client: 'Logística SA' },
 ];
 
 const Portfolio = () => {

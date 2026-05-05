@@ -180,3 +180,23 @@
   .stagger-parent.animate-active .stagger-item:nth-child(7) { transition-delay: 0.7s; }
   .stagger-parent.animate-active .stagger-item:nth-child(8) { transition-delay: 0.8s; }
 }
+
+@keyframes mask-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes mask-left {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-// Import portfolio images
-import cadernosTpa from '@/assets/portfolio/cadernos-tpa.jpg';
-import camisetasBic from '@/assets/portfolio/camisetas-bic.jpg';
-import standsMojogos from '@/assets/portfolio/stands-mojogos.jpg';
-import kitAgt from '@/assets/portfolio/kit-agt.jpg';
+// Use images from /dgueth
+const cadernosTpa = "/dgueth/img2.png";
+const camisetasBic = "/dgueth/img4.png";
+const standsMojogos = "/dgueth/img5.png";
+const kitAgt = "/dgueth/img3.png";
 
 const services = [
   {

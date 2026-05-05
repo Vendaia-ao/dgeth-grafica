@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import contactImage from '@/assets/portfolio/cadernos-tpa.jpg';
+// Use image from /dgueth
+const contactImage = "/dgueth/img10.png";
 
 const Contact = () => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
