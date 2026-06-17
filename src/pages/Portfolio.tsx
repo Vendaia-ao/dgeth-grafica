@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import useGSAP from '@/hooks/useGSAP';
+import { animateTitleReveal, animateCardReveal } from '@/lib/gsapAnimations';
 
 const ALL_CATEGORIES = [
   'Todos',
@@ -42,6 +44,13 @@ const Portfolio = () => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const portfolioTitleRef = useRef<HTMLHeadingElement>(null);
+
+  // Efeito 1: title reveal + Efeito 2: card overlay reveal
+  useGSAP(() => {
+    animateTitleReveal(portfolioTitleRef.current);
+    animateCardReveal('.portfolio-item-card');
+  }, []);
 
   // Calcular quais categorias têm 4 ou mais items
   const categoryCounts = projects.reduce((acc, project) => {
@@ -90,7 +99,10 @@ const Portfolio = () => {
           <span className="block text-ns-blue font-bold tracking-[0.2em] text-sm mb-4 uppercase">
             Nosso Portfólio
           </span>
-          <h2 className="text-5xl md:text-7xl font-display font-black text-foreground leading-[0.9]">
+          <h2
+            ref={portfolioTitleRef}
+            className="text-5xl md:text-7xl font-display font-black text-foreground leading-[0.9]"
+          >
             Conheça o nosso <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-ns-blue to-ns-cyan italic font-serif font-light pr-4">
               trabalho.
@@ -138,32 +150,36 @@ const Portfolio = () => {
               <div
                 key={project.id}
                 onClick={() => setSelectedIndex(index)}
-                className={`group relative overflow-hidden bg-muted cursor-pointer transition-all duration-500 hover:shadow-xl hover:-translate-y-1 break-inside-avoid scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
+                className={`portfolio-item-card group relative overflow-hidden bg-muted cursor-pointer transition-all duration-500 hover:shadow-xl hover:-translate-y-1 break-inside-avoid scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
                 style={{ transitionDelay: `${(index % 4) * 100}ms` }}
               >
-                {/* Image (no specific height, responds to original aspect ratio) */}
-                <img 
-                  src={project.image} 
-                  alt={project.title}
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 block"
-                  loading="lazy"
-                />
+                {/* Overlay GSAP Efeito 2 */}
+                <div className="card-overlay" />
+                <div className="card-content">
+                  {/* Image */}
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 block"
+                    loading="lazy"
+                  />
 
-                {/* Badge Destaque */}
-                {project.destaque && (
-                  <div className="absolute top-4 left-4 bg-ns-blue text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 py-1 shadow-md z-10">
-                    Destaque
+                  {/* Badge Destaque */}
+                  {project.destaque && (
+                    <div className="absolute top-4 left-4 bg-ns-blue text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 py-1 shadow-md z-10">
+                      Destaque
+                    </div>
+                  )}
+
+                  {/* Overlay Hover (Desktop) / Always visible (Mobile) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 sm:p-6 pointer-events-none">
+                    <h4 className="text-white drop-shadow-md font-display font-bold text-lg sm:text-xl">
+                      {project.title}
+                    </h4>
+                    <span className="text-white/80 text-xs sm:text-sm font-medium mt-1">
+                      {project.category}
+                    </span>
                   </div>
-                )}
-                
-                {/* Overlay Hover (Desktop) / Always visible (Mobile) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 sm:p-6 pointer-events-none">
-                  <h4 className="text-white drop-shadow-md font-display font-bold text-lg sm:text-xl">
-                    {project.title}
-                  </h4>
-                  <span className="text-white/80 text-xs sm:text-sm font-medium mt-1">
-                    {project.category}
-                  </span>
                 </div>
               </div>
             ))

@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import useGSAP from '@/hooks/useGSAP';
+import { animateTitleReveal, animateCardReveal, animateStatCounters } from '@/lib/gsapAnimations';
 
 // Images are now referenced directly in the components
 
@@ -48,6 +50,7 @@ const FloatingShapes = () => {
 const HeroSection = () => {
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
+  const heroH1Ref = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -58,6 +61,11 @@ const HeroSection = () => {
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Efeito 1: title reveal no hero (apenas na palavra principal IDEIAS)
+  useGSAP(() => {
+    animateTitleReveal(heroH1Ref.current);
   }, []);
 
   return (
@@ -84,6 +92,7 @@ const HeroSection = () => {
           {/* Word 1: IDEIAS */}
           <div className="col-span-1 lg:col-span-6 flex items-end justify-start">
             <h1
+              ref={heroH1Ref}
               className="font-display font-black text-5xl sm:text-6xl md:text-8xl lg:text-[8rem] text-foreground tracking-tighter leading-[0.8] opacity-0 animate-slide-up"
               style={{ transform: `translate(${mouseX * 0.1}px, ${mouseY * 0.1}px)` }}
             >
@@ -237,9 +246,14 @@ const CounterItem = ({
   );
 };
 
-// Counters Section — layout artístico
+// Counters Section — layout artístico com GSAP Efeito 5
 const CountersSection = () => {
   const { ref, isVisible } = useScrollAnimation();
+
+  // Efeito 5: stat counters com clip-path reveal + count-up GSAP
+  useGSAP(() => {
+    animateStatCounters();
+  }, []);
 
   return (
     <section ref={ref} className="relative overflow-hidden bg-background border-b border-border">
@@ -261,38 +275,37 @@ const CountersSection = () => {
           </span>
         </div>
 
-        {/* Grid de contadores com separadores verticais */}
+        {/* Grid de contadores — Efeito 5: cada item tem stat-card, stat-number e data-value */}
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
-          <CounterItem
-            prefix="+"
-            target={300}
-            label="Clientes"
-            sublabel="Satisfeitos"
-            isActive={isVisible}
-            delay={0}
-          />
-          <CounterItem
-            prefix="+"
-            target={3}
-            label="Anos"
-            sublabel="De experiência"
-            isActive={isVisible}
-            delay={150}
-          />
-          <CounterItem
-            target={7}
-            label="Soluções"
-            sublabel="Disponíveis"
-            isActive={isVisible}
-            delay={300}
-          />
-          <CounterItem
-            target={1}
-            label="Localização"
-            sublabel="Luanda, Angola"
-            isActive={isVisible}
-            delay={450}
-          />
+          {[
+            { prefix: '+', value: 300, label: 'Clientes', sublabel: 'Satisfeitos' },
+            { prefix: '+', value: 3,   label: 'Anos',     sublabel: 'De experiência' },
+            { prefix: '',  value: 7,   label: 'Soluções', sublabel: 'Disponíveis' },
+            { prefix: '',  value: 1,   label: 'Localização', sublabel: 'Luanda, Angola' },
+          ].map((item, idx) => (
+            <div key={idx} className="stat-card flex flex-col items-center justify-center text-center px-6 py-8 relative">
+              {/* Linha decorativa animada */}
+              <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-0 bg-ns-blue transition-all duration-700 ${isVisible ? 'h-8' : 'h-0'}`}
+                style={{ transitionDelay: `${idx * 150 + 400}ms` }}
+              />
+              <div className="relative mb-3">
+                <span className="text-6xl sm:text-7xl md:text-8xl font-display font-black leading-none tracking-tight text-foreground">
+                  {item.prefix}<span
+                    className="stat-number"
+                    data-value={item.value}
+                  >0</span>
+                </span>
+                {/* Linha decorativa sob o número */}
+                <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] bg-ns-blue transition-all duration-700 ${isVisible ? 'w-full' : 'w-0'}`}
+                  style={{ transitionDelay: `${idx * 150 + 400}ms` }}
+                />
+              </div>
+              <span className="text-sm sm:text-base font-bold uppercase tracking-[0.2em] text-foreground/80 mt-4 block">
+                {item.label}
+              </span>
+              <span className="text-xs text-muted-foreground mt-1 font-medium">{item.sublabel}</span>
+            </div>
+          ))}
         </div>
 
         {/* Faixa inferior decorativa */}
@@ -396,7 +409,13 @@ const BrandsMarquee = () => {
   // Services Section
 const ServicesSection = () => {
   const { ref, isVisible } = useScrollAnimation();
-  
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Efeito 2: card overlay reveal nos service-cards
+  useGSAP(() => {
+    animateCardReveal('.service-card');
+  }, []);
+
   const services = [
     {
       title: 'Brindes Corporativos',
@@ -440,35 +459,41 @@ const ServicesSection = () => {
           {services.map((service, idx) => (
             <div
               key={idx}
-              className="stagger-item group relative bg-card p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 ease-out-expo border border-border overflow-hidden hover:-translate-y-2"
+              className="service-card stagger-item group relative bg-card p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 ease-out-expo border border-border overflow-hidden hover:-translate-y-2"
             >
-              {/* Animated BG Shape */}
-              <div className={`absolute top-0 right-0 p-4 sm:p-6 opacity-10 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out-expo transform origin-top-right`}>
-                <svg className={`w-24 sm:w-32 h-24 sm:h-32 text-ns-blue ${service.rotateClass}`} fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" />
-                </svg>
+              {/* Overlay GSAP Efeito 2 */}
+              <div className="card-overlay" />
+
+              {/* Conteúdo do card */}
+              <div className="card-content">
+                {/* Animated BG Shape */}
+                <div className={`absolute top-0 right-0 p-4 sm:p-6 opacity-10 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out-expo transform origin-top-right`}>
+                  <svg className={`w-24 sm:w-32 h-24 sm:h-32 text-ns-blue ${service.rotateClass}`} fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" />
+                  </svg>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-4 relative z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                  {service.title}
+                </h3>
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-serif italic mb-6 relative z-10">
+                  {service.desc}
+                </p>
+
+                <div className="w-full h-[1px] bg-border mb-6 group-hover:bg-ns-blue/20 transition-colors" />
+
+                <ul className="space-y-2 relative z-10">
+                  {service.tags.map((tag, tagIdx) => (
+                    <li
+                      key={tagIdx}
+                      className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider group-hover:text-ns-blue transition-all translate-x-0 group-hover:translate-x-2 duration-300"
+                      style={{ transitionDelay: `${tagIdx * 50}ms` }}
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
               </div>
-
-              <h3 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-4 relative z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                {service.title}
-              </h3>
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-serif italic mb-6 relative z-10">
-                {service.desc}
-              </p>
-
-              <div className="w-full h-[1px] bg-border mb-6 group-hover:bg-ns-blue/20 transition-colors" />
-
-              <ul className="space-y-2 relative z-10">
-                {service.tags.map((tag, tagIdx) => (
-                  <li
-                    key={tagIdx}
-                    className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider group-hover:text-ns-blue transition-all translate-x-0 group-hover:translate-x-2 duration-300"
-                    style={{ transitionDelay: `${tagIdx * 50}ms` }}
-                  >
-                    {tag}
-                  </li>
-                ))}
-              </ul>
             </div>
           ))}
         </div>
@@ -480,6 +505,13 @@ const ServicesSection = () => {
 // Portfolio Teaser Section
 const PortfolioTeaser = () => {
   const { ref, isVisible } = useScrollAnimation();
+  const portfolioH2Ref = useRef<HTMLHeadingElement>(null);
+
+  // Efeito 1 no título + Efeito 2 nos portfolio cards
+  useGSAP(() => {
+    animateTitleReveal(portfolioH2Ref.current);
+    animateCardReveal('.portfolio-card');
+  }, []);
   
   const items = [
     { id: 1, title: 'TECSEP Kit Corporativo', cat: 'Brindes Corporativos', img: "/imgs/portifolio/port%20(1).jpg" },
@@ -502,13 +534,13 @@ const PortfolioTeaser = () => {
         <div className={`flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 md:gap-8 scroll-animate-init reveal-up ${isVisible ? 'animate-active' : ''}`}>
           <div>
             <span className="text-ns-cyan font-bold tracking-[0.2em] text-xs sm:text-sm mb-4 uppercase block">Prova Visual</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-white">
+            <h2 ref={portfolioH2Ref} className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-white">
               Qualidade que não <br className="hidden sm:block" />precisa de legendas.
             </h2>
           </div>
           <Link
             to="/portfolio"
-            className="px-6 sm:px-8 py-3 border border-white/20 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-xs sm:text-sm uppercase tracking-wide cursor-pointer hover:scale-105 active:scale-95 duration-300"
+            className="btn-bold px-6 sm:px-8 py-3 border border-white/20 rounded-full hover:text-slate-900 transition-colors font-bold text-xs sm:text-sm uppercase tracking-wide cursor-pointer active:scale-95 duration-300"
           >
             Ver Portfólio Completo
           </Link>
@@ -518,18 +550,22 @@ const PortfolioTeaser = () => {
           {items.map((item, i) => (
             <div
               key={item.id}
-              className={`group relative overflow-hidden rounded-xl cursor-pointer bg-slate-800 scroll-animate-init reveal-mask-up ${isVisible ? 'animate-active' : ''}`}
+              className={`portfolio-card group relative overflow-hidden rounded-xl cursor-pointer bg-slate-800 scroll-animate-init reveal-mask-up ${isVisible ? 'animate-active' : ''}`}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out-expo group-hover:scale-110 opacity-80 group-hover:opacity-100"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
-              <div className="absolute bottom-0 left-0 p-6 sm:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out-back">
-                <span className="text-ns-cyan text-xs font-bold uppercase tracking-widest mb-1 block">{item.cat}</span>
-                <h3 className="text-lg sm:text-xl font-display font-bold text-white group-hover:text-ns-yellow transition-colors leading-tight">{item.title}</h3>
+              {/* Overlay GSAP Efeito 2 */}
+              <div className="card-overlay" />
+              <div className="card-content h-full">
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out-expo group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
+                <div className="absolute bottom-0 left-0 p-6 sm:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out-back">
+                  <span className="text-ns-cyan text-xs font-bold uppercase tracking-widest mb-1 block">{item.cat}</span>
+                  <h3 className="text-lg sm:text-xl font-display font-bold text-white group-hover:text-ns-yellow transition-colors leading-tight">{item.title}</h3>
+                </div>
               </div>
             </div>
           ))}

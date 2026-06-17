@@ -1,6 +1,9 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import useGSAP from '@/hooks/useGSAP';
+import { animateTitleReveal } from '@/lib/gsapAnimations';
 
 // Use images from /imgs/portifolio
 const img1 = "/imgs/portifolio/port%20(1).jpg";
@@ -170,6 +173,12 @@ const ServiceCard = ({ service, index }: { service: typeof services[0]; index: n
 const Services = () => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation();
+  const servicesH2Ref = useRef<HTMLHeadingElement>(null);
+
+  // Efeito 1: title reveal no h2 do hero
+  useGSAP(() => {
+    animateTitleReveal(servicesH2Ref.current);
+  }, []);
 
   return (
     <section id="services" className="relative min-h-screen z-20">
@@ -193,7 +202,7 @@ const Services = () => {
             <span className="block text-ns-cyan font-bold tracking-[0.2em] text-sm mb-4 uppercase">
               A Solução Completa
             </span>
-            <h2 className="text-5xl md:text-7xl font-display font-black text-white leading-[0.9] mb-8">
+            <h2 ref={servicesH2Ref} className="text-5xl md:text-7xl font-display font-black text-white leading-[0.9] mb-8">
               A solução completa para<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-ns-cyan to-white italic font-serif font-light pr-4">
                 a sua comunicação.
@@ -233,7 +242,7 @@ const Services = () => {
               </p>
               <Link
                 to="/contacto"
-                className="inline-block px-10 py-4 bg-ns-yellow text-slate-900 font-bold rounded-full hover:bg-white transition-all transform hover:scale-105 shadow-lg animate-pulse-slow"
+                className="btn-bold inline-block px-10 py-4 bg-ns-yellow text-slate-900 font-bold rounded-full hover:text-slate-900 transition-colors shadow-lg"
               >
                 Solicitar Orçamento
               </Link>

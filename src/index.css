@@ -200,3 +200,65 @@
   from { transform: translateY(40px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+/* ─── Efeito 4: Botões CTA — Recorte diagonal no hover ─────────────────────── */
+.btn-bold {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.btn-bold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--ns-dark));
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+  transition: clip-path 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: -1;
+}
+.btn-bold:hover::before {
+  clip-path: polygon(0 100%, 100% 100%, 100% 0%, 0% 30%);
+}
+
+/* ─── Efeito 2: Card overlay (elemento de cobertura para GSAP) ──────────────── */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--ns-blue));
+  z-index: 2;
+  pointer-events: none;
+  transform-origin: left;
+}
+
+/* ─── Efeito 5: Stat cards ───────────────────────────────────────────────────── */
+.stat-card {
+  clip-path: inset(0 0 0 0); /* estado inicial: já visível (GSAP sobrepõe) */
+}
+
+/* ─── Margens globais — mais respiração ─────────────────────────────────────── */
+.container {
+  padding-left: clamp(1.5rem, 5vw, 4rem);
+  padding-right: clamp(1.5rem, 5vw, 4rem);
+}
+
+/* Remover scrollbar horizontal acidental */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Ocultar scrollbar na barra de filtros do portfólio */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Títulos com SplitText (Efeito 1) ────────────────────────────────────── */
+/* Garantir que as line-wrapper criadas pelo SplitText não quebrem o layout */
+.line-wrapper {
+  display: block;
+  overflow: hidden;
+}
+
