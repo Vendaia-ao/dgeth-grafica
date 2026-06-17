@@ -2,48 +2,64 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-// Use images from /dgueth
-const cadernosTpa = "/dgueth/img2.png";
-const camisetasBic = "/dgueth/img4.png";
-const standsMojogos = "/dgueth/img5.png";
-const kitAgt = "/dgueth/img3.png";
+// Use images from /imgs/portifolio
+const img1 = "/imgs/portifolio/port%20(1).jpg";
+const img2 = "/imgs/portifolio/port%20(2).jpg";
+const img3 = "/imgs/portifolio/port%20(3).jpg";
+const img4 = "/imgs/portifolio/port%20(4).jpg";
+const img5 = "/imgs/portifolio/port%20(5).jpg";
+const img6 = "/imgs/portifolio/port%20(6).jpg";
+const img7 = "/imgs/portifolio/port%20(7).jpg";
 
 const services = [
   {
     id: 1,
-    title: 'Criação e Design Visual',
-    description: 'Damos vida às suas ideias. A nossa equipa de design desenvolve a identidade visual perfeita para destacar a sua marca no mercado, tanto no mundo físico como no digital.',
-    features: ['Identidade Visual & Logotipos', 'Web Design', 'Design para Redes Sociais (Post Digital)', 'Design de Material Gráfico'],
-    image: cadernosTpa,
-    highlightTitle: 'Criatividade',
-    highlightText: 'Ideias que se transformam em imagens memoráveis.',
+    title: 'Identidade Visual',
+    description: 'Transformamos a identidade da sua marca em algo único, profissional e memorável. Desenvolvemos logotipos, paletas de cores, tipografias e materiais gráficos estratégicos que fortalecem a presença da sua empresa no mercado.',
+    image: img1,
+    destaque: false,
   },
   {
     id: 2,
-    title: 'Impressão e Comunicação Visual',
-    description: 'Qualidade de impressão que impressiona. Produzimos todo o material corporativo e publicitário que a sua empresa necessita para se comunicar com eficácia.',
-    features: ['Pequeno Formato (Flyers, Cartões, Envelopes)', 'Grande Formato & Displays (Roll-Ups, Balcões)', 'Identificação & Decoração (Passes PVC)', 'Impressão em Vinil para eventos'],
-    image: standsMojogos,
-    highlightTitle: 'Qualidade',
-    highlightText: 'Utilizamos os melhores materiais e equipamentos.',
+    title: 'Post Digital',
+    description: 'Desenvolvimento de artes personalizadas para redes sociais, campanhas promocionais, anúncios digitais e comunicação online, com foco em impacto visual, engajamento e fortalecimento da presença digital da sua marca.',
+    image: img2,
+    destaque: false,
   },
   {
     id: 3,
-    title: 'Brindes e Artigos Personalizados',
-    description: 'Fortaleça a cultura da sua empresa e fidelize clientes com produtos exclusivos. Vestimos a sua equipa e personalizamos os melhores brindes com a sua marca.',
-    features: ['Fardamento e Têxteis (Uniformes, T-shirts)', 'Brindes Corporativos (Chávenas, Canetas)', 'Blocos de Notas Personalizados', 'Diversos artigos promocionais'],
-    image: kitAgt,
-    highlightTitle: 'Personalização',
-    highlightText: 'Produtos exclusivos com a sua marca.',
+    title: 'Impressão Gráfica em Diversos Formatos',
+    description: 'Serviços completos de impressão em diferentes tipos de papel e acabamentos, incluindo cartões de visita, flyers, brochuras, catálogos, agendas, envelopes, blocos, pastas, convites, menus, certificados e materiais promocionais.',
+    image: img3,
+    destaque: false,
   },
   {
     id: 4,
-    title: 'Personalização de Viaturas (Frota)',
-    description: 'Transforme os veículos da sua empresa em painéis publicitários móveis. Aumente a visibilidade do seu negócio em cada deslocação com as nossas soluções de rotulagem automóvel.',
-    features: ['Envelopamento Total', 'Envelopamento Parcial', 'Micro Perfurados para Vidros', 'Aplicação de Logotipo e Contactos'],
-    image: camisetasBic,
-    highlightTitle: 'Mobilidade',
-    highlightText: 'A sua frota trabalha como publicidade móvel.',
+    title: 'Brindes Corporativos',
+    description: 'Produção e personalização de brindes corporativos exclusivos para promoção, fidelização e valorização da marca. Trabalhamos com canecas, canetas, cadernos, garrafas térmicas, t-shirts, bonés, bolsas, porta-chaves, kits empresariais.',
+    image: img4,
+    destaque: true,
+  },
+  {
+    id: 5,
+    title: 'Envelopamento e Comunicação Visual',
+    description: 'Serviços de envelopamento de viaturas, montras comerciais, paredes, vitrines e espaços corporativos, utilizando materiais de alta qualidade para promover maior visibilidade, profissionalismo e impacto visual à marca.',
+    image: img5,
+    destaque: true,
+  },
+  {
+    id: 6,
+    title: 'Fachadas Luminosas',
+    description: 'Desenvolvimento e instalação de fachadas luminosas modernas e personalizadas para empresas, lojas e estabelecimentos comerciais. Criamos soluções em acrílico, LED, caixas luminosas e letreiros que destacam a identidade da marca.',
+    image: img6,
+    destaque: false,
+  },
+  {
+    id: 7,
+    title: 'Vinil, Banners e Displays Publicitários',
+    description: 'Produção de materiais publicitários em vinil e grande formato, incluindo banners, roll ups, lonas, adesivos, painéis promocionais e displays para campanhas, feiras, eventos e exposições.',
+    image: img7,
+    destaque: true,
   },
 ];
 
@@ -55,7 +71,7 @@ const ServiceCard = ({ service, index }: { service: typeof services[0]; index: n
   return (
     <div
       ref={ref}
-      className={`group relative py-20 md:py-32 scroll-animate-init reveal-up ${isVisible ? 'animate-active' : ''} ${
+      className={`group relative py-12 md:py-20 scroll-animate-init reveal-up ${isVisible ? 'animate-active' : ''} ${
         isDarkSection ? 'bg-slate-900' : 'bg-background'
       }`}
     >
@@ -84,35 +100,26 @@ const ServiceCard = ({ service, index }: { service: typeof services[0]; index: n
 
           {/* Content Column - appears first on even, second on odd */}
           <div
-            className={`relative z-10 md:col-span-5 ${isEven ? 'md:col-start-1 md:order-1' : 'md:col-start-8 md:order-2'}`}
+            className={`relative z-10 md:col-span-7 ${isEven ? 'md:col-start-1 md:order-1' : 'md:col-start-6 md:order-2'}`}
           >
+            {service.destaque && (
+              <span className="inline-block px-3 py-1 bg-ns-yellow text-slate-900 text-xs font-bold uppercase tracking-widest rounded-full mb-4 shadow-lg border border-ns-yellow">
+                Em Destaque
+              </span>
+            )}
             <h3 className={`text-3xl md:text-5xl font-display font-bold mb-6 group-hover:text-ns-cyan transition-colors ${
               isDarkSection ? 'text-white' : 'text-foreground'
             }`}>
               {service.title}
             </h3>
 
-            <div className="h-1 w-20 bg-ns-yellow mb-8 transform origin-left group-hover:scale-x-150 transition-transform duration-500 ease-out-expo" />
+            <div className={`h-1 w-20 ${service.destaque ? 'bg-ns-yellow' : 'bg-ns-cyan'} mb-8 transform origin-left group-hover:scale-x-150 transition-transform duration-500 ease-out-expo`} />
 
             <p className={`text-lg mb-8 leading-relaxed font-light ${
               isDarkSection ? 'text-slate-300' : 'text-muted-foreground'
             }`}>
               {service.description}
             </p>
-
-            <ul className="space-y-3 mb-10">
-              {service.features.map((feature, idx) => (
-                <li
-                  key={idx}
-                  className={`flex items-center gap-3 text-sm font-semibold tracking-wide ${
-                    isDarkSection ? 'text-slate-400' : 'text-muted-foreground'
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-ns-cyan animate-pulse" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
 
             <Link
               to="/contacto"
@@ -125,9 +132,9 @@ const ServiceCard = ({ service, index }: { service: typeof services[0]; index: n
 
           {/* Image Column - appears second on even, first on odd */}
           <div
-            className={`relative z-10 md:col-span-6 ${isEven ? 'md:col-start-7 md:order-2' : 'md:col-start-1 md:order-1'}`}
+            className={`relative z-10 md:col-span-5 ${isEven ? 'md:col-start-8 md:order-2' : 'md:col-start-1 md:order-1'}`}
           >
-            <div className="relative aspect-[4/5] md:aspect-[3/4] group-hover:z-20 transition-all duration-500">
+            <div className="relative aspect-[4/3] md:aspect-video group-hover:z-20 transition-all duration-500">
               {/* Decorative Shape */}
               <div
                 className={`absolute inset-0 bg-ns-cyan/20 transform transition-transform duration-700 ease-out ${
@@ -151,20 +158,6 @@ const ServiceCard = ({ service, index }: { service: typeof services[0]; index: n
                 <div className={`absolute inset-0 bg-gradient-to-t opacity-60 group-hover:opacity-30 transition-opacity duration-500 ${
                   isDarkSection ? 'from-slate-900/80' : 'from-background/80'
                 } to-transparent`} />
-              </div>
-
-              {/* Floating Detail Card */}
-              <div
-                className={`absolute backdrop-blur p-4 rounded shadow-xl max-w-[180px] hidden md:block transform transition-transform duration-500 group-hover:-translate-y-2 bottom-8 ${
-                  isEven ? '-left-8' : '-right-8'
-                } ${isDarkSection ? 'bg-slate-800/90 border border-white/10' : 'bg-card border border-border'}`}
-              >
-                <span className="block text-ns-cyan text-xs font-bold uppercase mb-1">
-                  {service.highlightTitle}
-                </span>
-                <span className={`block text-xs leading-tight ${isDarkSection ? 'text-slate-200' : 'text-muted-foreground'}`}>
-                  {service.highlightText}
-                </span>
               </div>
             </div>
           </div>

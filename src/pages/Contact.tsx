@@ -1,32 +1,59 @@
 import { useState } from 'react';
-import { Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
+import { Mail, MapPin, Phone, ArrowRight, Clock } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-// Use image from /dgueth
-const contactImage = "/dgueth/img10.png";
+// Use image from /imgs/portifolio
+const contactImage = "/imgs/portifolio/port%20(10).jpg";
+
+const servicesList = [
+  '',
+  'Identidade Visual',
+  'Post Digital',
+  'Impressão Gráfica em Diversos Formatos',
+  'Brindes Corporativos',
+  'Envelopamento e Comunicação Visual',
+  'Fachadas Luminosas',
+  'Vinil, Banners e Displays Publicitários'
+];
 
 const Contact = () => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: infoRef, isVisible: infoVisible } = useScrollAnimation();
   const { ref: formRef, isVisible: formVisible } = useScrollAnimation();
 
+  const [activeTab, setActiveTab] = useState<'orcamento' | 'simples'>('orcamento');
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
+    service: '',
+    deadline: '',
     message: '',
+    file: null as File | null,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    // Simulate email/WhatsApp notification sending
+    console.log('Sending notification to dgethgrafica@gmail.com and WhatsApp +244 944 974 378', formData);
+    alert('Pedido enviado com sucesso! Entraremos em contacto brevemente.');
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const target = e.target as HTMLInputElement;
+    if (target.name === 'file' && target.files) {
+      const file = target.files[0];
+      if (file && file.size > 10 * 1024 * 1024) {
+        alert("O ficheiro deve ter no máximo 10MB");
+        return;
+      }
+      setFormData((prev) => ({ ...prev, file }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [target.name]: target.value,
+      }));
+    }
   };
 
   return (
@@ -45,7 +72,7 @@ const Contact = () => {
               <span className="gradient-text font-serif italic font-light">projeto agora?</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed font-light border-l-2 border-ns-yellow pl-6">
-              Estamos prontos para ouvir as suas necessidades. Rapidez, qualidade e durabilidade na comunicação do seu negócio.
+              Estamos prontos para ouvir as suas necessidades e orçamentar o seu projeto.
             </p>
         </div>
       </div>
@@ -71,9 +98,9 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
-                    WhatsApp (Prioritário)
+                    Telefone / WhatsApp
                   </p>
-                  <p className="text-xl font-bold text-foreground">944 974 378</p>
+                  <p className="text-xl font-bold text-foreground">+244 944 974 378</p>
                 </div>
               </a>
 
@@ -84,7 +111,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Email</p>
-                  <p className="text-lg font-semibold text-foreground break-all">gdethgrafica@gmail.com</p>
+                  <p className="text-lg font-semibold text-foreground break-all">dgethgrafica@gmail.com</p>
                 </div>
               </div>
 
@@ -96,81 +123,98 @@ const Contact = () => {
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Localização</p>
                   <p className="text-lg font-semibold text-foreground">
-                    Luanda, Angola
+                    Rua da Missão, Kinaxixi, Ingombotas, Luanda — Angola
                   </p>
                 </div>
               </div>
 
-            {/* Phone Card */}
+              {/* Horário Card */}
               <div className="stagger-item flex items-center gap-4 group p-6 rounded-2xl bg-card shadow-sm border border-border">
                 <div className="w-14 h-14 rounded-full bg-ns-blue/10 flex items-center justify-center text-ns-blue">
-                  <Phone className="w-7 h-7" />
+                  <Clock className="w-7 h-7" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Telefone / WhatsApp</p>
-                  <p className="text-lg font-semibold text-foreground">
-                    +244 944 974 378
-                  </p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Horário de funcionamento</p>
+                  <p className="text-lg font-semibold text-foreground">Seg - Sáb: 08h00 – 16h00</p>
+                  <p className="text-sm text-muted-foreground">Domingo: Encerrado</p>
                 </div>
               </div>
             </div>
 
-          {/* Image + Contact Form */}
+          {/* Form Side */}
           <div
             ref={formRef}
             className={`lg:w-2/3 scroll-animate-init reveal-scale ${formVisible ? 'animate-active' : ''}`}
             style={{ transitionDelay: '200ms' }}
           >
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Image Side */}
-              <div className="hidden md:block relative rounded-3xl overflow-hidden">
-                <img 
-                  src={contactImage} 
-                  alt="Contacte-nos" 
-                  className="w-full h-full object-cover min-h-[400px]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+            <div className="bg-card p-8 md:p-12 rounded-3xl shadow-xl border border-border hover:shadow-2xl transition-shadow duration-500">
+              <h3 className="text-2xl font-display font-bold text-foreground mb-6">
+                Como podemos ajudar?
+              </h3>
+
+              <div className="flex gap-2 sm:gap-4 mb-8">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('orcamento')}
+                  className={`flex-1 py-3 px-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all ${
+                    activeTab === 'orcamento'
+                      ? 'bg-ns-blue text-white shadow-md'
+                      : 'bg-secondary text-muted-foreground hover:bg-ns-blue/10 hover:text-ns-blue'
+                  }`}
+                >
+                  Pedido de Orçamento
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('simples')}
+                  className={`flex-1 py-3 px-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all ${
+                    activeTab === 'simples'
+                      ? 'bg-ns-blue text-white shadow-md'
+                      : 'bg-secondary text-muted-foreground hover:bg-ns-blue/10 hover:text-ns-blue'
+                  }`}
+                >
+                  Contacto Simples
+                </button>
               </div>
 
-              {/* Form Side */}
-              <div className="bg-card p-8 md:p-12 rounded-3xl shadow-xl border border-border hover:shadow-2xl transition-shadow duration-500">
-                <h3 className="text-2xl font-display font-bold text-foreground mb-6">
-                  Envie um pedido de orçamento
-                </h3>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
-                        Nome Completo
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
-                        placeholder="Seu nome"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
-                        Telefone / WhatsApp
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
-                        placeholder="Seu contacto"
-                      />
-                    </div>
-                  </div>
-
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {activeTab === 'orcamento' ? (
+                  <>
+                    <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
-                      Email (Opcional)
+                      Nome Completo *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
+                      placeholder="Seu nome"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                      Telefone / WhatsApp *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
+                      placeholder="Seu contacto"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                      Email
                     </label>
                     <input
                       type="email"
@@ -181,32 +225,127 @@ const Contact = () => {
                       placeholder="seu@email.com"
                     />
                   </div>
-
                   <div className="space-y-2">
                     <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
-                      Mensagem ou Detalhes do Projeto
+                      Serviço de interesse
                     </label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
+                    <select
+                      name="service"
+                      value={formData.service}
                       onChange={handleChange}
-                      rows={6}
-                      className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium resize-none focus:scale-[1.01] duration-300"
-                      placeholder="Conte-nos sobre o que precisa imprimir, quantidades ou ideias..."
+                      className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
+                    >
+                      {servicesList.map((svc, idx) => (
+                        <option key={idx} value={svc} disabled={idx === 0}>
+                          {idx === 0 ? 'Selecione um serviço' : svc}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                    Descrição do Projeto *
+                  </label>
+                  <textarea
+                    name="message"
+                    required
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={5}
+                    className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium resize-none focus:scale-[1.01] duration-300"
+                    placeholder="Conte-nos os detalhes (tamanho, quantidade, referências)..."
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                      Prazo Pretendido
+                    </label>
+                    <input
+                      type="text"
+                      name="deadline"
+                      value={formData.deadline}
+                      onChange={handleChange}
+                      className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
+                      placeholder="Ex: Urgente, 2 semanas..."
                     />
                   </div>
-
-                  <div className="flex justify-end pt-4">
-                    <button
-                      type="submit"
-                      className="w-full md:w-auto px-10 py-5 bg-ns-blue hover:bg-ns-dark text-white font-bold text-lg rounded-xl transition-all shadow-lg shadow-ns-blue/30 transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3"
-                    >
-                      <span>Enviar Pedido</span>
-                      <ArrowRight className="h-5 w-5" />
-                    </button>
+                  <div className="space-y-2">
+                    <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                      Upload de Ficheiro (Até 10MB)
+                    </label>
+                    <input
+                      type="file"
+                      name="file"
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-muted-foreground font-medium focus:scale-[1.01] duration-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-ns-blue/10 file:text-ns-blue hover:file:bg-ns-blue hover:file:text-white"
+                      accept="image/*,application/pdf"
+                    />
                   </div>
-                </form>
-              </div>
+                </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                          Nome Completo *
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          required
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
+                          placeholder="Seu nome"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                          Email *
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          required
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium focus:scale-[1.01] duration-300"
+                          placeholder="seu@email.com"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-muted-foreground text-xs font-bold uppercase tracking-wider ml-1">
+                        Mensagem *
+                      </label>
+                      <textarea
+                        name="message"
+                        required
+                        value={formData.message}
+                        onChange={handleChange}
+                        rows={5}
+                        className="w-full px-4 py-4 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ns-blue focus:border-transparent outline-none transition-all text-foreground font-medium resize-none focus:scale-[1.01] duration-300"
+                        placeholder="Como podemos ajudar?"
+                      />
+                    </div>
+                  </>
+                )}
+
+                <div className="flex justify-end pt-4">
+                  <button
+                    type="submit"
+                    className="w-full md:w-auto px-10 py-5 bg-ns-blue hover:bg-ns-dark text-white font-bold text-lg rounded-xl transition-all shadow-lg shadow-ns-blue/30 transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3"
+                  >
+                    <span>{activeTab === 'orcamento' ? 'Pedir Orçamento' : 'Enviar Mensagem'}</span>
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

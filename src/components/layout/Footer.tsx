@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Mail, Phone } from 'lucide-react';
+import { MapPin, Mail, Clock } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -20,7 +20,7 @@ const Footer = () => {
             <div className="lg:col-span-5 space-y-6">
               <Link to="/" className="flex items-center gap-3 group w-fit">
                 <img 
-                  src="/dgeth-favicon.png" 
+                  src="/imgs/logotipos/logo-branco.png" 
                   alt="Dgeth Gráfica" 
                   className="h-10 w-auto object-contain"
                 />
@@ -50,7 +50,7 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/a-empresa" className="text-lg text-slate-300 hover:text-white hover:translate-x-2 transition-all duration-300 inline-block">
+                  <Link to="/sobre-nos" className="text-lg text-slate-300 hover:text-white hover:translate-x-2 transition-all duration-300 inline-block">
                     A Empresa
                   </Link>
                 </li>
@@ -99,7 +99,16 @@ const Footer = () => {
                   </div>
                   <div>
                     <p className="text-xs text-slate-400 font-bold uppercase">Localização</p>
-                    <p className="text-white font-bold">Luanda, Angola</p>
+                    <p className="text-white font-bold">Rua da Missão, Kinaxixi, Ingombotas, Luanda — Angola</p>
+                  </div>
+                </li>
+                <li className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">
+                    <Clock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-400 font-bold uppercase">Horário</p>
+                    <p className="text-white font-bold">Seg - Sáb: 08h00 – 16h00</p>
                   </div>
                 </li>
               </ul>
@@ -116,6 +125,19 @@ const Footer = () => {
           </p>
 
           <div className="flex gap-4">
+            {/* Facebook */}
+            <a
+              href="https://www.facebook.com/Dgeth-Grafica"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-slate-400 hover:bg-[#1877F2] hover:text-white transition-all duration-300"
+            >
+              <span className="sr-only">Facebook</span>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+              </svg>
+            </a>
+            {/* Instagram */}
             <a
               href="https://www.instagram.com/dgeth_grafica/"
               target="_blank"
@@ -129,6 +151,18 @@ const Footer = () => {
                   d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772 4.902 4.902 0 011.772-1.153c.636-.247 1.363-.416 2.427-.465C9.673 2.013 10.03 2 12.48 2h-.165zm-2.34 3a2 2 0 110 4 2 2 0 010-4zm4.965 2a4.965 4.965 0 01-4.965 4.965A4.965 4.965 0 015 12a4.965 4.965 0 014.965-4.965A4.965 4.965 0 0114.94 7z"
                   clipRule="evenodd"
                 />
+              </svg>
+            </a>
+            {/* TikTok */}
+            <a
+              href="https://www.tiktok.com/@dgeth_grafica"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-slate-400 hover:bg-black hover:text-white transition-all duration-300"
+            >
+              <span className="sr-only">TikTok</span>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.39-3.16-3.8-5.46-.4-2.08-.06-4.24 1.12-5.95 1.15-1.7 3.16-2.82 5.03-3.1 1.25-.19 2.53-.16 3.75.2v4.02c-.89-.25-1.84-.31-2.73-.09-1.25.32-2.31 1.28-2.61 2.59-.28 1.25.12 2.58.98 3.51 1.07 1.15 2.85 1.58 4.29.98 1.3-.54 2.21-1.78 2.37-3.18.06-.52.05-1.04.05-1.56V.02z" />
               </svg>
             </a>
           </div>

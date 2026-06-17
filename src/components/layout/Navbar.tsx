@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import logoDgeth from '@/assets/dgeth-logo.png';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -48,7 +47,7 @@ const Navbar = () => {
         {/* Logo - Dgeth Gráfica logo */}
         <Link to="/" className="flex items-center gap-2 group cursor-pointer">
           <img 
-            src={logoDgeth} 
+            src="/imgs/logotipos/logo-azul.png" 
             alt="Dgeth Gráfica" 
             className="h-10 sm:h-12 md:h-14 w-auto object-contain"
           />
@@ -78,7 +77,7 @@ const Navbar = () => {
                 : 'bg-ns-blue hover:bg-ns-dark text-white'
             }`}
           >
-            Fale Conosco
+            Fale Connosco
           </Link>
         </div>
 
@@ -116,7 +115,7 @@ const Navbar = () => {
               to="/contacto"
               className="w-full text-center px-6 py-3 bg-ns-blue text-white font-bold rounded-lg shadow-lg mt-2"
             >
-              Fale Conosco
+              Fale Connosco
             </Link>
           </div>
         )}

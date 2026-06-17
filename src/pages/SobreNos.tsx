@@ -8,16 +8,24 @@ const kitAgt = "/dgueth/img3.png";
 
 const values = [
   {
-    title: 'Rapidez',
-    desc: 'Cumprimos prazos porque sabemos que o tempo do seu negócio é valioso.',
-  },
-  {
     title: 'Qualidade',
-    desc: 'Utilizamos os melhores materiais e equipamentos de impressão do mercado.',
+    desc: 'Compromisso com um serviço impecável.',
   },
   {
-    title: 'Durabilidade',
-    desc: 'Produtos e aplicações feitas para resistir ao tempo e ao uso diário.',
+    title: 'Inovação',
+    desc: 'Buscar constantemente novas tecnologias e tendências.',
+  },
+  {
+    title: 'Compromisso com o cliente',
+    desc: 'Atendimento personalizado e eficaz.',
+  },
+  {
+    title: 'Sustentabilidade',
+    desc: 'Uso responsável de materiais e processos ecológicos.',
+  },
+  {
+    title: 'Ética e transparência',
+    desc: 'Relações baseadas na confiança e respeito.',
   },
 ];
 
@@ -65,89 +73,24 @@ const About = () => {
               Dgeth Gráfica
             </span>
             <h1 className="font-display font-black text-5xl md:text-7xl lg:text-8xl text-foreground leading-[0.9] mb-10 tracking-tight">
-              A solução completa para<br />
-              a sua <span className="font-serif italic font-light text-muted-foreground">comunicação</span>.
+              A gráfica que te <span className="font-serif italic font-light text-muted-foreground">move</span>.
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-light border-l-2 border-ns-yellow pl-6">
-              Trabalhamos baseados em três pilares fundamentais: Rapidez, Qualidade e Durabilidade.
+              Soluções completas e inovadoras em comunicação visual e brindes corporativos.
             </p>
           </div>
         </div>
       </section>
 
-      {/* 2. HISTÓRIA (NARRATIVA) - COM IMAGEM */}
+      {/* 2. QUEM SOMOS */}
       <section className="py-24 relative z-10">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-12 gap-12 items-start">
-            {/* Abstract Line Visual */}
-            <div
-              ref={historyRef}
-              className={`hidden md:block md:col-span-3 lg:col-span-4 relative h-full min-h-[200px] scroll-animate-init reveal-mask-up ${historyVisible ? 'animate-active' : ''}`}
-            >
-              <div className="absolute top-0 left-0 w-[1px] h-full bg-gradient-to-b from-ns-blue to-transparent" />
-              <div className="absolute top-0 left-[-4px] w-2 h-2 rounded-full bg-ns-blue" />
-            </div>
-
-            <div
-              className={`md:col-span-9 lg:col-span-8 scroll-animate-init reveal-up ${historyVisible ? 'animate-active' : ''}`}
-              style={{ transitionDelay: '100ms' }}
-            >
-              <div className="grid md:grid-cols-2 gap-8 items-start">
-                <div>
-                  <h2 className="text-3xl font-display font-bold text-foreground mb-8">Nossa Trajetória</h2>
-                  <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-                    <p>
-                      A Dgeth Gráfica nasceu com o propósito de oferecer a solução completa para a comunicação e imagem do seu negócio em Luanda.
-                    </p>
-                    <p>
-                      Ao longo dos anos, investimos em equipamentos modernos e numa equipa especializada que domina as mais diversas técnicas de design e impressão.
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      Hoje, somos a escolha de quem procura rapidez, qualidade e durabilidade.
-                    </p>
-                  </div>
-                </div>
-                <div className="relative">
-                  <img 
-                    src={materialCorporativo} 
-                    alt="Material Corporativo" 
-                    className="rounded-2xl shadow-xl w-full h-auto object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent rounded-2xl" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. HISTÓRIA (NARRATIVA) */}
-      <section className="py-24 relative z-10">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-12 gap-12 items-start">
-            {/* Abstract Line Visual */}
-            <div
-              ref={historyRef}
-              className={`hidden md:block md:col-span-3 lg:col-span-4 relative h-full min-h-[200px] scroll-animate-init reveal-mask-up ${historyVisible ? 'animate-active' : ''}`}
-            >
-              <div className="absolute top-0 left-0 w-[1px] h-full bg-gradient-to-b from-ns-blue to-transparent" />
-              <div className="absolute top-0 left-[-4px] w-2 h-2 rounded-full bg-ns-blue" />
-            </div>
-
-            <div
-              className={`md:col-span-9 lg:col-span-6 scroll-animate-init reveal-up ${historyVisible ? 'animate-active' : ''}`}
-              style={{ transitionDelay: '100ms' }}
-            >
-              <h2 className="text-3xl font-display font-bold text-foreground mb-8">Nossa Trajetória</h2>
+            <div className="md:col-span-12 lg:col-span-10">
+              <h2 className="text-3xl font-display font-bold text-foreground mb-8">Quem Somos</h2>
               <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
                 <p>
-                  A Dgeth Gráfica nasceu com o propósito de oferecer a solução completa para a comunicação e imagem do seu negócio em Luanda. Percebemos que as empresas precisavam de um parceiro que unisse criatividade, tecnologia e agilidade.
-                </p>
-                <p>
-                  Ao longo dos anos, investimos em equipamentos modernos e numa equipa especializada que domina as mais diversas técnicas de design e impressão. Da criação à personalização de viaturas, entregamos excelência.
-                </p>
-                <p className="font-semibold text-foreground">
-                  Hoje, somos a escolha de quem procura rapidez, qualidade e durabilidade. Somos a casa das marcas que exigem o melhor em comunicação visual.
+                  Empresa privada de direito angolano, constituída aos 22 de Maio de 2023 em Luanda, matriculada na Conservatória de Registro Comercial da 2ª Seção do Guiché Único de Empresas, contribuinte fiscal nº 5001496662. A Dgeth Gráfica é uma empresa especializada em oferecer soluções de impressão de alta qualidade para empresas e indivíduos. Com 3 anos de experiência, contamos com uma equipe jovem e dinâmica, tecnologia de ponta e um compromisso inabalável com a excelência e inovação. Nosso objetivo é transformar ideias em materiais impressos impactantes, atendendo desde pequenas até grandes produções. O objetivo específico da nossa empresa é oferecer soluções completas e inovadoras em comunicação visual e brindes corporativos, focadas no fortalecimento da marca dos nossos clientes. Também disponibilizamos serviços de design gráfico e identidade visual, produção de materiais publicitários em vinil, banners, roll ups, lonas, backdrops e muito mais.
                 </p>
               </div>
             </div>
@@ -155,68 +98,51 @@ const About = () => {
         </div>
       </section>
 
-      {/* 3. VALORES (O QUE NOS MOVE) - COM IMAGEM */}
-      <section className="py-32 bg-card relative z-10 border-y border-border">
+      {/* 3. MISSÃO E VISÃO */}
+      <section className="py-24 relative z-10 bg-card border-y border-border">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <div>
+              <h2 className="text-3xl font-display font-bold text-foreground mb-6">Missão</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed font-serif italic border-l-4 border-ns-blue pl-4">
+                "Oferecer serviços gráficos de alta qualidade, atendendo às necessidades dos clientes com excelência, criatividade e compromisso garantindo sempre o melhor resultado."
+              </p>
+            </div>
+            <div>
+              <h2 className="text-3xl font-display font-bold text-foreground mb-6">Visão</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed font-serif italic border-l-4 border-ns-yellow pl-4">
+                "Ser referência em soluções gráficas na região, trazendo inovação e tecnologia para transformar a comunicação visual dos nossos clientes."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. VALORES */}
+      <section className="py-32 relative z-10">
         <div className="container mx-auto px-6">
           <div
             ref={valuesRef}
             className={`mb-16 scroll-animate-init reveal-scale ${valuesVisible ? 'animate-active' : ''}`}
           >
-            <span className="text-ns-blue font-bold tracking-[0.2em] text-xs uppercase mb-2 block">Porquê Escolher-nos</span>
-            <h2 className="text-4xl font-display font-bold text-foreground">O que é inegociável</h2>
+            <span className="text-ns-blue font-bold tracking-[0.2em] text-xs uppercase mb-2 block">O nosso compromisso</span>
+            <h2 className="text-4xl font-display font-bold text-foreground">Valores</h2>
           </div>
 
-          <div className={`grid md:grid-cols-3 gap-8 stagger-parent ${valuesVisible ? 'animate-active' : ''}`}>
+          <div className={`grid md:grid-cols-3 lg:grid-cols-5 gap-6 stagger-parent ${valuesVisible ? 'animate-active' : ''}`}>
             {values.map((val, idx) => (
               <div
                 key={idx}
-                className="stagger-item group p-8 border border-border hover:border-ns-blue/30 transition-all duration-500 bg-background rounded-xl hover:shadow-lg hover:-translate-y-1"
+                className="stagger-item group p-6 border border-border hover:border-ns-blue/30 transition-all duration-500 bg-background rounded-xl hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between"
               >
-                <div className="mb-4">
-                  <img 
-                    src={idx === 0 ? cadernosTpa : idx === 1 ? kitAgt : kitAgt} 
-                    alt={val.title}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
+                <div>
+                  <h3 className="text-lg font-bold text-foreground mb-3 group-hover:text-ns-blue transition-colors">
+                    {val.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{val.desc}</p>
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-ns-blue transition-colors">
-                  {val.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{val.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. PROCESSO (COMO TRABALHAMOS) - COM IMAGEM */}
-      <section ref={processRef} className="py-32 relative z-10">
-        <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-12 gap-16">
-            <div
-              className={`lg:col-span-4 scroll-animate-init reveal-mask-left ${processVisible ? 'animate-active' : ''}`}
-            >
-              <h2 className="text-4xl font-display font-bold text-foreground mb-6">Processo Fluido</h2>
-              <p className="text-muted-foreground mb-8">
-                Eliminamos a burocracia desnecessária. Nosso fluxo é desenhado para garantir precisão técnica sem travar o seu cronograma.
-              </p>
-              <div className="hidden lg:block w-16 h-1 bg-ns-yellow" />
-            </div>
-
-            <div className="lg:col-span-8">
-              <div className={`grid md:grid-cols-2 gap-x-12 gap-y-16 stagger-parent ${processVisible ? 'animate-active' : ''}`}>
-                {steps.map((step) => (
-                  <div key={step.id} className="stagger-item relative pl-8 border-l border-border">
-                    <span className="absolute -left-[9px] top-0 w-[18px] h-[18px] rounded-full bg-background border-4 border-ns-blue" />
-                    <span className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">
-                      Passo 0{step.id}
-                    </span>
-                    <h4 className="text-2xl font-bold text-foreground mb-3">{step.title}</h4>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -238,7 +164,7 @@ const About = () => {
               <path d="M14.017 21L14.017 18C14.017 16.8954 13.1216 16 12.017 16H9L9.00003 12.3789C15.025 12.3789 15.025 3 9.00003 3H3V12.3789H6.28998C6.67069 13.7144 7.69165 14.7354 9.02717 15.1161V21H14.017ZM21 21L21 18C21 16.8954 20.1046 16 19 16H15.983L15.983 12.3789C22.008 12.3789 22.008 3 15.983 3H9.98297V12.3789H13.273C13.6537 13.7144 14.6747 14.7354 16.0102 15.1161V21H21Z" />
             </svg>
              <p className="text-2xl md:text-4xl font-display font-medium leading-tight mb-8">
-              "Na Dgeth Gráfica, trabalhamos baseados na <span className="text-ns-cyan italic font-serif">rapidez, qualidade e durabilidade</span>. Transformamos a imagem do seu negócio com excelência."
+              "A Dgeth Gráfica é uma empresa especializada em oferecer soluções de impressão de alta qualidade para empresas e indivíduos."
             </p>
             <div className="w-20 h-[1px] bg-slate-700 mx-auto" />
           </div>

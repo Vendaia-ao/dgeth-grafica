@@ -69,7 +69,7 @@ const HeroSection = () => {
       {/* Background Image Hero */}
       <div className="absolute inset-0 z-0 opacity-10">
         <img 
-          src="/dgueth/img11.png" 
+          src="/imgs/portifolio/port (11).jpg" 
           alt="Dgeth Gráfica Background" 
           className="w-full h-full object-cover grayscale blur-sm"
         />
@@ -93,9 +93,11 @@ const HeroSection = () => {
 
           {/* Tagline */}
           <div className="col-span-1 lg:col-span-3 flex items-center opacity-0 animate-slide-up-delay-1">
-            <p className="text-base sm:text-lg md:text-xl text-foreground/70 font-light leading-relaxed max-w-xs pl-4 border-l-2 border-ns-blue">
-              A solução completa para a comunicação e imagem do seu negócio. Design, impressão e personalização em Luanda.
-            </p>
+            <div className="flex flex-col gap-4">
+              <p className="text-base sm:text-lg md:text-xl text-foreground/70 font-light leading-relaxed max-w-xs pl-4 border-l-2 border-ns-blue">
+                A solução completa para a comunicação e imagem do seu negócio. Design gráfico, impressão digital e brindes corporativos em Luanda.
+              </p>
+            </div>
           </div>
 
           {/* Word 2: QUE GANHAM - "que" with italic serif font */}
@@ -179,6 +181,139 @@ const HeroSection = () => {
   );
 };
 
+
+// Hook para animar o contador de 0 até ao valor final
+const useCounterUp = (target: number, duration: number, isActive: boolean) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!isActive) return;
+    let start = 0;
+    const step = Math.ceil(target / (duration / 16));
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isActive, target, duration]);
+  return count;
+};
+
+// Componente individual de um counter com animação
+const CounterItem = ({
+  prefix = '', suffix = '', target, label, sublabel, isActive, delay
+}: {
+  prefix?: string; suffix?: string; target: number; label: string; sublabel?: string; isActive: boolean; delay: number;
+}) => {
+  const count = useCounterUp(target, 1600, isActive);
+  return (
+    <div
+      className="flex flex-col items-center justify-center text-center px-6 py-8 relative group"
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {/* Número principal */}
+      <div className="relative mb-3">
+        <span className="text-6xl sm:text-7xl md:text-8xl font-display font-black leading-none tracking-tight text-foreground">
+          {prefix}{count}{suffix}
+        </span>
+        {/* Linha decorativa animada sob o número */}
+        <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] bg-ns-blue transition-all duration-700 ${isActive ? 'w-full' : 'w-0'}`}
+          style={{ transitionDelay: `${delay + 400}ms` }}
+        />
+      </div>
+      {/* Label */}
+      <span className="text-sm sm:text-base font-bold uppercase tracking-[0.2em] text-foreground/80 mt-4 block">
+        {label}
+      </span>
+      {/* Sublabel opcional */}
+      {sublabel && (
+        <span className="text-xs text-muted-foreground mt-1 font-medium">{sublabel}</span>
+      )}
+    </div>
+  );
+};
+
+// Counters Section — layout artístico
+const CountersSection = () => {
+  const { ref, isVisible } = useScrollAnimation();
+
+  return (
+    <section ref={ref} className="relative overflow-hidden bg-background border-b border-border">
+      {/* Faixa de gradiente decorativa no topo */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ns-blue to-transparent" />
+
+      {/* Marca d'água tipográfica ao fundo */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span className="text-[10rem] sm:text-[14rem] md:text-[18rem] font-display font-black text-foreground/[0.025] leading-none tracking-tighter whitespace-nowrap">
+          DGETH
+        </span>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        {/* Label de secção */}
+        <div className={`pt-10 pb-2 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <span className="text-xs font-bold uppercase tracking-[0.3em] text-ns-blue">
+            Em números
+          </span>
+        </div>
+
+        {/* Grid de contadores com separadores verticais */}
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
+          <CounterItem
+            prefix="+"
+            target={300}
+            label="Clientes"
+            sublabel="Satisfeitos"
+            isActive={isVisible}
+            delay={0}
+          />
+          <CounterItem
+            prefix="+"
+            target={3}
+            label="Anos"
+            sublabel="De experiência"
+            isActive={isVisible}
+            delay={150}
+          />
+          <CounterItem
+            target={7}
+            label="Soluções"
+            sublabel="Disponíveis"
+            isActive={isVisible}
+            delay={300}
+          />
+          <CounterItem
+            target={1}
+            label="Localização"
+            sublabel="Luanda, Angola"
+            isActive={isVisible}
+            delay={450}
+          />
+        </div>
+
+        {/* Faixa inferior decorativa */}
+        <div className={`flex items-center gap-4 pb-10 pt-4 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transitionDelay: '600ms' }}>
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground whitespace-nowrap">
+            Dgeth Gráfica — Luanda
+          </span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+      </div>
+
+      {/* Faixa de gradiente decorativa no fundo */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ns-blue/40 to-transparent" />
+    </section>
+  );
+};
+
+
+
 // Brands Marquee Section - Fixed visibility
 const BrandsMarquee = () => {
   const brands = [
@@ -230,14 +365,14 @@ const BrandsMarquee = () => {
           
           <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 stagger-parent ${isVisible ? 'animate-active' : ''}`}>
             {[
-              "/dgueth/img6.png", 
-              "/dgueth/img1.jpeg", 
-              "/dgueth/img2.png", 
-              "/dgueth/img3.png", 
-              "/dgueth/img4.png", 
-              "/dgueth/img5.png",
-              "/dgueth/img12.png",
-              "/dgueth/img13.png"
+              "/imgs/portifolio/port (1).jpg", 
+              "/imgs/portifolio/port (2).jpg", 
+              "/imgs/portifolio/port (3).jpg", 
+              "/imgs/portifolio/port (4).jpg", 
+              "/imgs/portifolio/port (5).jpg", 
+              "/imgs/portifolio/port (6).jpg",
+              "/imgs/portifolio/port (7).jpg",
+              "/imgs/portifolio/port (8).jpg"
             ].map((img, idx) => (
               <div 
                 key={idx} 
@@ -264,21 +399,21 @@ const ServicesSection = () => {
   
   const services = [
     {
-      title: 'Impressão de todo otipo de papel',
-      desc: 'Sem limites na quantidade.',
-      tags: ['Branding', 'Editorial', 'Layout'],
+      title: 'Brindes Corporativos',
+      desc: 'Produção e personalização de brindes exclusivos para a sua marca.',
+      tags: ['Canecas', 'T-shirts', 'Kits'],
       rotateClass: 'rotate-0',
     },
     {
-      title: 'Personalização de uniformes',
-      desc: 'Qualidade que se vê e se toca.',
-      tags: ['Alta Tiragem', 'Acabamentos', 'Cor Real'],
+      title: 'Envelopamento e Comunicação Visual',
+      desc: 'Serviços de envelopamento de viaturas e espaços corporativos.',
+      tags: ['Viaturas', 'Montras', 'Paredes'],
       rotateClass: 'rotate-12',
     },
     {
-      title: 'Comunicação Visual',
-      desc: 'Presença física que chama atenção.',
-      tags: ['Fachadas', 'Sinalização', 'Grandes Formatos'],
+      title: 'Vinil, Banners e Displays',
+      desc: 'Produção de materiais publicitários em grande formato.',
+      tags: ['Lonas', 'Roll ups', 'Adesivos'],
       rotateClass: '-rotate-6',
     },
   ];
@@ -347,13 +482,9 @@ const PortfolioTeaser = () => {
   const { ref, isVisible } = useScrollAnimation();
   
   const items = [
-    { id: 1, title: 'TECSEP Kit Corporativo', cat: 'Material Promocional', img: "/dgueth/img1.jpeg", gridClass: "md:col-span-2 md:row-span-2" },
-    { id: 2, title: 'Cadernos TPA', cat: 'Editorial', img: "/dgueth/img2.png", gridClass: "md:col-span-1 md:row-span-1" },
-    { id: 3, title: 'Kit AGT', cat: 'Embalagem', img: "/dgueth/img3.png", gridClass: "md:col-span-1 md:row-span-2" },
-    { id: 4, title: 'Stands Mô Jogos', cat: 'Comunicação Visual', img: "/dgueth/img5.png", gridClass: "md:col-span-1 md:row-span-1" },
-    { id: 5, title: 'Camisetas BIC', cat: 'Branding', img: "/dgueth/img4.png", gridClass: "md:col-span-2 md:row-span-1" },
-    { id: 6, title: 'Cordões Continental', cat: 'Acessórios', img: "/dgueth/img7.png", gridClass: "md:col-span-1 md:row-span-1" },
-    { id: 7, title: 'Cadernos Women', cat: 'Editorial', img: "/dgueth/img8.png", gridClass: "md:col-span-1 md:row-span-1" },
+    { id: 1, title: 'TECSEP Kit Corporativo', cat: 'Brindes Corporativos', img: "/imgs/portifolio/port%20(1).jpg" },
+    { id: 2, title: 'Cadernos TPA', cat: 'Brindes Corporativos', img: "/imgs/portifolio/port%20(2).jpg" },
+    { id: 3, title: 'Kit AGT', cat: 'Brindes Corporativos', img: "/imgs/portifolio/port%20(3).jpg" }
   ];
 
   return (
@@ -383,11 +514,11 @@ const PortfolioTeaser = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 auto-rows-[250px] md:auto-rows-[220px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 auto-rows-[300px]">
           {items.map((item, i) => (
             <div
               key={item.id}
-              className={`group relative overflow-hidden rounded-xl cursor-pointer bg-slate-800 scroll-animate-init reveal-mask-up ${isVisible ? 'animate-active' : ''} ${item.gridClass}`}
+              className={`group relative overflow-hidden rounded-xl cursor-pointer bg-slate-800 scroll-animate-init reveal-mask-up ${isVisible ? 'animate-active' : ''}`}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
               <img
@@ -500,7 +631,7 @@ const DifferentialsSection = () => {
             <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-ns-blue rounded-2xl transform rotate-3 animate-float-random opacity-20" />
             <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-slate-900 rounded-2xl transform -rotate-2 overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-0 hover:scale-105">
               <img
-                src="/dgueth/img9.png"
+                src="/imgs/portifolio/port (9).jpg"
                 className="w-full h-full object-cover opacity-80"
                 alt="Qualidade NS"
               />
@@ -546,9 +677,10 @@ const Home = () => {
   return (
     <>
       <HeroSection />
+      <CountersSection />
       <ServicesSection />
       <PortfolioTeaser />
-      <BrandsMarquee />
+      {/* <BrandsMarquee />  - Removido a pedido do cliente (sem destaques a clientes/parceiros) */}
       <ProcessSection />        
       <DifferentialsSection />
       <CTASection />

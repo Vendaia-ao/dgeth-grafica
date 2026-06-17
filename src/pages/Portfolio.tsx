@@ -1,25 +1,74 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-const projects = [
-  { id: 1, title: 'Material Corporativo', category: 'Branding', image: "/dgueth/img1.jpeg", client: 'TECSEP' },
-  { id: 2, title: 'Cadernos Personalizados', category: 'Editorial', image: "/dgueth/img2.png", client: 'TPA' },
-  { id: 3, title: 'Kit Corporativo', category: 'Embalagem', image: "/dgueth/img3.png", client: 'AGT' },
-  { id: 4, title: 'Camisetas Personalizadas', category: 'Branding', image: "/dgueth/img4.png", client: 'BIC' },
-  { id: 5, title: 'Stands Promocionais', category: 'Sinalização', image: "/dgueth/img5.png", client: 'Mô Jogos' },
-  { id: 6, title: 'Cordões Personalizados', category: 'Branding', image: "/dgueth/img7.png", client: 'Continental' },
-  { id: 7, title: 'Cadernos Premium', category: 'Editorial', image: "/dgueth/img8.png", client: 'Women' },
-  { id: 8, title: 'Copos Personalizados', category: 'Embalagem', image: "/dgueth/img6.png", client: 'Cliente Premium' },
-  { id: 9, title: 'Design de Identidade', category: 'Design', image: "/dgueth/img9.png", client: 'Novo Cliente' },
-  { id: 10, title: 'Material Publicitário', category: 'Branding', image: "/dgueth/img10.png", client: 'Luanda Corp' },
-  { id: 11, title: 'Brindes Exclusivos', category: 'Brindes', image: "/dgueth/img11.png", client: 'Eventos Pro' },
-  { id: 12, title: 'Comunicação Visual', category: 'Sinalização', image: "/dgueth/img12.png", client: 'Shopping Center' },
-  { id: 13, title: 'Frota Personalizada', category: 'Frota', image: "/dgueth/img13.png", client: 'Logística SA' },
+const ALL_CATEGORIES = [
+  'Todos',
+  'Identidade Visual',
+  'Brindes Corporativos',
+  'Roll Ups e Backdrops',
+  'Viaturas',
+  'Equipamentos Desportivos',
+  'Sublimação',
+  'Outros'
 ];
+
+const projects = [
+  // ── Brindes Corporativos ──────────────────────────────────────────────────
+  { id: 1,  title: 'TECSEP Kit Corporativo',    category: 'Brindes Corporativos',      image: "/imgs/portifolio/port%20(1).jpg",  destaque: true  },
+  { id: 2,  title: 'Cadernos TPA',              category: 'Brindes Corporativos',      image: "/imgs/portifolio/port%20(2).jpg",  destaque: false },
+  { id: 3,  title: 'Kit AGT',                   category: 'Brindes Corporativos',      image: "/imgs/portifolio/port%20(3).jpg",  destaque: true  },
+  { id: 6,  title: 'Cordões Continental',       category: 'Brindes Corporativos',      image: "/imgs/portifolio/port%20(6).jpg",  destaque: false },
+  { id: 7,  title: 'Cadernos Women',            category: 'Brindes Corporativos',      image: "/imgs/portifolio/port%20(7).jpg",  destaque: false },
+  // ── Sublimação ────────────────────────────────────────────────────────────
+  { id: 5,  title: 'Camisetas BIC',             category: 'Sublimação',                image: "/imgs/portifolio/port%20(5).jpg",  destaque: true  },
+  { id: 8,  title: 'Sublimação Corporativa',    category: 'Sublimação',                image: "/imgs/portifolio/port%20(8).jpg",  destaque: false },
+  { id: 10, title: 'Camisetas Personalizadas',  category: 'Sublimação',                image: "/imgs/portifolio/port%20(10).jpg", destaque: false },
+  { id: 11, title: 'Kit Desportivo',            category: 'Sublimação',                image: "/imgs/portifolio/port%20(11).jpg", destaque: false },
+  // ── Outros ────────────────────────────────────────────────────────────────
+  { id: 4,  title: 'Stands Mô Jogos',           category: 'Outros',                    image: "/imgs/portifolio/port%20(4).jpg",  destaque: false },
+  { id: 9,  title: 'Produção Gráfica',          category: 'Outros',                    image: "/imgs/portifolio/port%20(9).jpg",  destaque: false },
+  { id: 12, title: 'Projecto Gráfico',          category: 'Outros',                    image: "/imgs/portifolio/port%20(12).jpg", destaque: false },
+  { id: 13, title: 'Peça Corporativa',          category: 'Outros',                    image: "/imgs/portifolio/port%20(13).jpg", destaque: false },
+  { id: 14, title: 'Material Publicitário',     category: 'Outros',                    image: "/imgs/portifolio/port%20(14).jpg", destaque: false },
+];
+
+// ⚠️ NOTA PARA EQUIPA: Para actualizar títulos, categorias ou destaques de cada projecto,
+// edite apenas o array `projects` acima — sem tocar em nenhum outro código.
+// Campo `destaque: true` mostra a badge "Destaque" no cartão (limite recomendado: 2-3 por categoria).
 
 const Portfolio = () => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const [activeCategory, setActiveCategory] = useState('Todos');
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  // Calcular quais categorias têm 4 ou mais items
+  const categoryCounts = projects.reduce((acc, project) => {
+    acc[project.category] = (acc[project.category] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const visibleCategories = ALL_CATEGORIES.filter(
+    cat => cat === 'Todos' || (categoryCounts[cat] && categoryCounts[cat] >= 4)
+  );
+
+  const filteredProjects = activeCategory === 'Todos' 
+    ? projects 
+    : projects.filter(p => p.category === activeCategory);
+
+  // Fechar lightbox no ESC e navegar com setas
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedIndex !== null) {
+        if (e.key === 'Escape') setSelectedIndex(null);
+        if (e.key === 'ArrowRight') setSelectedIndex((prev) => prev !== null && prev < filteredProjects.length - 1 ? prev + 1 : prev);
+        if (e.key === 'ArrowLeft') setSelectedIndex((prev) => prev !== null && prev > 0 ? prev - 1 : prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIndex, filteredProjects.length]);
 
   return (
     <section id="portfolio" className="pt-40 pb-32 relative min-h-screen">
@@ -36,57 +85,89 @@ const Portfolio = () => {
         {/* Header */}
         <div
           ref={headerRef}
-          className={`mb-16 scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
+          className={`mb-12 scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
         >
           <span className="block text-ns-blue font-bold tracking-[0.2em] text-sm mb-4 uppercase">
-            Nossa Curadoria
+            Nosso Portfólio
           </span>
           <h2 className="text-5xl md:text-7xl font-display font-black text-foreground leading-[0.9]">
-            Onde a técnica <br />
+            Conheça o nosso <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-ns-blue to-ns-cyan italic font-serif font-light pr-4">
-              encontra a arte.
+              trabalho.
             </span>
           </h2>
         </div>
 
-        {/* Simple Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {projects.map((project, index) => (
-            <div
-              key={project.id}
-              className={`group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ${
-                index === 0 || index === 4 ? 'sm:col-span-2 lg:col-span-2' : ''
-              } scroll-animate-init reveal-mask-up ${headerVisible ? 'animate-active' : ''}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              {/* Image */}
-              <img 
-                src={project.image} 
-                alt={project.title}
-                className="w-full h-64 md:h-80 object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 md:p-8">
-                <span className="text-xs font-bold uppercase tracking-wider text-ns-cyan mb-2">
-                  {project.category}
-                </span>
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-slate-300 text-sm">
-                  {project.client}
-                </p>
-              </div>
+        {/* Filters and Count */}
+        <div className="mb-12">
+          {/* Scrollable Filters */}
+          <div className="flex overflow-x-auto pb-4 gap-2 no-scrollbar mb-6 w-full">
+            {visibleCategories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 border ${
+                  activeCategory === cat
+                    ? 'bg-ns-blue border-ns-blue text-white shadow-md'
+                    : 'bg-transparent border-border/60 text-muted-foreground hover:bg-ns-blue/10 hover:text-ns-blue hover:border-ns-blue/30'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
 
-              {/* Default State */}
-              <div className="absolute bottom-4 left-4 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                <h4 className="text-white drop-shadow-md font-display font-bold text-lg">
-                  {project.title}
-                </h4>
+          {/* Dynamic Count */}
+          <p className="text-muted-foreground font-medium text-sm md:text-base border-b border-border/50 pb-4">
+            {activeCategory === 'Todos' ? (
+              <>{filteredProjects.length} projectos</>
+            ) : (
+              <><span className="text-foreground font-bold">{activeCategory}</span> — {filteredProjects.length} projectos</>
+            )}
+          </p>
+        </div>
+
+        {/* Masonry Grid */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 md:gap-6 space-y-4 md:space-y-6">
+          {filteredProjects.length === 0 ? (
+             <div className="py-20 text-center text-muted-foreground break-inside-avoid">
+               <p>Imagens para esta categoria serão adicionadas brevemente.</p>
+             </div>
+          ) : (
+            filteredProjects.map((project, index) => (
+              <div
+                key={project.id}
+                onClick={() => setSelectedIndex(index)}
+                className={`group relative overflow-hidden bg-muted cursor-pointer transition-all duration-500 hover:shadow-xl hover:-translate-y-1 break-inside-avoid scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
+                style={{ transitionDelay: `${(index % 4) * 100}ms` }}
+              >
+                {/* Image (no specific height, responds to original aspect ratio) */}
+                <img 
+                  src={project.image} 
+                  alt={project.title}
+                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 block"
+                  loading="lazy"
+                />
+
+                {/* Badge Destaque */}
+                {project.destaque && (
+                  <div className="absolute top-4 left-4 bg-ns-blue text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 py-1 shadow-md z-10">
+                    Destaque
+                  </div>
+                )}
+                
+                {/* Overlay Hover (Desktop) / Always visible (Mobile) */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 sm:p-6 pointer-events-none">
+                  <h4 className="text-white drop-shadow-md font-display font-bold text-lg sm:text-xl">
+                    {project.title}
+                  </h4>
+                  <span className="text-white/80 text-xs sm:text-sm font-medium mt-1">
+                    {project.category}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* CTA */}
@@ -100,6 +181,65 @@ const Portfolio = () => {
           </Link>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedIndex !== null && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-300"
+          onClick={() => setSelectedIndex(null)}
+        >
+          {/* Botão Fechar */}
+          <button 
+            className="absolute top-4 right-4 sm:top-8 sm:right-8 text-white/50 hover:text-white transition-colors z-50 p-2 bg-black/20 rounded-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedIndex(null);
+            }}
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {/* Botão Anterior */}
+          {selectedIndex > 0 && (
+            <button 
+              className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-50 p-2 sm:p-4 bg-black/20 hover:bg-black/40 rounded-full"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedIndex(selectedIndex - 1);
+              }}
+            >
+              <ChevronLeft className="w-8 h-8 sm:w-12 sm:h-12" />
+            </button>
+          )}
+
+          {/* Imagem */}
+          <div className="relative max-w-[95vw] max-h-[90vh] flex items-center justify-center pointer-events-none" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={filteredProjects[selectedIndex].image} 
+              alt={filteredProjects[selectedIndex].title} 
+              className="max-w-full max-h-[85vh] object-contain shadow-2xl animate-in zoom-in-95 duration-300 pointer-events-auto"
+            />
+            <div className="absolute -bottom-10 left-0 right-0 text-center pointer-events-none">
+               <p className="text-white/80 text-sm">
+                 {filteredProjects[selectedIndex].title} <span className="opacity-50 mx-2">|</span> {filteredProjects[selectedIndex].category}
+               </p>
+            </div>
+          </div>
+
+          {/* Botão Seguinte */}
+          {selectedIndex < filteredProjects.length - 1 && (
+            <button 
+              className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-50 p-2 sm:p-4 bg-black/20 hover:bg-black/40 rounded-full"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedIndex(selectedIndex + 1);
+              }}
+            >
+              <ChevronRight className="w-8 h-8 sm:w-12 sm:h-12" />
+            </button>
+          )}
+        </div>
+      )}
     </section>
   );
 };
