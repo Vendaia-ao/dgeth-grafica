@@ -4,20 +4,49 @@ import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import useGSAP from '@/hooks/useGSAP';
 import { animateTitleReveal } from '@/lib/gsapAnimations';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+import SEO from '@/components/SEO';
 
-const values = [
-  { title: 'Qualidade', desc: 'Compromisso com um serviço impecável.' },
-  { title: 'Inovação', desc: 'Buscar constantemente novas tecnologias e tendências.' },
-  { title: 'Compromisso com o cliente', desc: 'Atendimento personalizado e eficaz.' },
-  { title: 'Sustentabilidade', desc: 'Uso responsável de materiais e processos ecológicos.' },
-  { title: 'Ética e transparência', desc: 'Relações baseadas na confiança e respeito.' },
-];
+const FALLBACK_COMPANY = {
+  slogan: 'A gráfica que te move.',
+  about_text: 'Empresa privada de direito angolano, constituída aos 22 de Maio de 2023 em Luanda, matriculada na Conservatória de Registro Comercial da 2ª Seção do Guichê Único de Empresas, contribuinte fiscal nº 5001496662. A Dgeth Gráfica é uma empresa especializada em oferecer soluções de impressão de alta qualidade para empresas e indivíduos. Com 3 anos de experiência, contamos com uma equipe jovem e dinâmica, tecnologia de ponta e um compromisso inabelável com a excelência e inovação.',
+  about_quote: 'Transformar ideias em materiais impressos impactantes, atendendo desde pequenas até grandes produções.',
+  about_details: 'O objectivo específico da nossa empresa é oferecer soluções completas e inovadoras em comunicação visual e brindes corporativos, focadas no fortalecimento da marca dos nossos clientes.',
+  mission: 'Oferecer serviços gráficos de alta qualidade, atendendo às necessidades dos clientes com excelência, criatividade e compromisso garantindo sempre o melhor resultado.',
+  vision: 'Ser referência em soluções gráficas na região, trazendo inovação e tecnologia para transformar a comunicação visual dos nossos clientes.',
+  values: [
+    { title: 'Qualidade', desc: 'Compromisso com um serviço impecável.' },
+    { title: 'Inovação', desc: 'Buscar constantemente novas tecnologias e tendências.' },
+    { title: 'Compromisso com o cliente', desc: 'Atendimento personalizado e eficaz.' },
+    { title: 'Sustentabilidade', desc: 'Uso responsável de materiais e processos ecológicos.' },
+    { title: 'Ética e transparência', desc: 'Relações baseadas na confiança e respeito.' },
+  ],
+};
 
 const About = () => {
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation();
   const { ref: valuesRef, isVisible: valuesVisible } = useScrollAnimation();
   const { ref: quoteRef, isVisible: quoteVisible } = useScrollAnimation();
   const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation();
+
+  // Buscar dados dinâmicos da empresa no Supabase (com fallback local)
+  const { data: companyData } = useQuery({
+    queryKey: ['company_info_sobre'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('company_info')
+        .select('slogan,about_text,about_quote,about_details,mission,vision,values')
+        .eq('id', 1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const company = companyData || FALLBACK_COMPANY;
+  const values = (company.values && company.values.length > 0) ? company.values : FALLBACK_COMPANY.values;
 
   // Refs para GSAP Efeito 1 (clip-path title reveal)
   const heroTitleRef = useRef<HTMLHeadingElement>(null);
@@ -36,6 +65,11 @@ const About = () => {
 
   return (
     <>
+      <SEO
+        pagePath="/sobre-nos"
+        defaultTitle="Sobre Nós — Dgeth Gráfica"
+        defaultDescription="Conheça a nossa missão, visão, valores e o percurso da Dgeth Gráfica no mercado de impressão em Angola."
+      />
       {/* 1. HERO EDITORIAL */}
       <section className="pt-48 pb-32 relative z-10 min-h-[60vh] flex flex-col justify-center">
         <div className="container mx-auto px-6">
@@ -66,9 +100,7 @@ const About = () => {
             <div className="md:col-span-12 lg:col-span-10">
               <h2 className="text-3xl font-display font-bold text-foreground mb-8">Quem Somos</h2>
               <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-                <p>
-                  Empresa privada de direito angolano, constituída aos 22 de Maio de 2023 em Luanda, matriculada na Conservatória de Registro Comercial da 2ª Seção do Guiché Único de Empresas, contribuinte fiscal nº 5001496662. A Dgeth Gráfica é uma empresa especializada em oferecer soluções de impressão de alta qualidade para empresas e indivíduos. Com 3 anos de experiência, contamos com uma equipe jovem e dinâmica, tecnologia de ponta e um compromisso inabalável com a excelência e inovação.
-                </p>
+                <p>{company.about_text}</p>
               </div>
             </div>
           </div>
@@ -103,7 +135,7 @@ const About = () => {
 
             {/* Texto de destaque */}
             <blockquote className="text-2xl md:text-3xl lg:text-4xl font-display font-medium text-white leading-snug mb-10">
-              "Transformar ideias em materiais impressos impactantes, atendendo desde pequenas até grandes produções."
+              "{company.about_quote}"
             </blockquote>
 
             {/* Linha divisória */}
@@ -111,7 +143,7 @@ const About = () => {
 
             {/* Detalhe expandido */}
             <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-3xl">
-              O objectivo específico da nossa empresa é oferecer soluções completas e inovadoras em comunicação visual e brindes corporativos, focadas no fortalecimento da marca dos nossos clientes. Também disponibilizamos serviços de design gráfico e identidade visual, produção de materiais publicitários em vinil, banners, roll ups, lonas, backdrops e muito mais.
+              {company.about_details}
             </p>
           </div>
         </div>
@@ -124,13 +156,13 @@ const About = () => {
             <div>
               <h2 ref={missionH2Ref} className="text-3xl font-display font-bold text-foreground mb-6">Missão</h2>
               <p className="text-lg text-muted-foreground leading-relaxed font-serif italic border-l-4 border-ns-blue pl-4">
-                "Oferecer serviços gráficos de alta qualidade, atendendo às necessidades dos clientes com excelência, criatividade e compromisso garantindo sempre o melhor resultado."
+                "{company.mission}"
               </p>
             </div>
             <div>
               <h2 ref={visionH2Ref} className="text-3xl font-display font-bold text-foreground mb-6">Visão</h2>
               <p className="text-lg text-muted-foreground leading-relaxed font-serif italic border-l-4 border-ns-yellow pl-4">
-                "Ser referência em soluções gráficas na região, trazendo inovação e tecnologia para transformar a comunicação visual dos nossos clientes."
+                "{company.vision}"
               </p>
             </div>
           </div>

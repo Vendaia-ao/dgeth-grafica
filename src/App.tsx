@@ -11,28 +11,37 @@ import SobreNos from "./pages/SobreNos";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
+import Login from "./pages/admin/Login";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ProtectedRoute from "./components/admin/ProtectedRoute";
+import { SiteDataProvider } from "./context/SiteDataContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/servicos" element={<Services />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/sobre-nos" element={<SobreNos />} />
-            <Route path="/contacto" element={<Contact />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <SiteDataProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/servicos" element={<Services />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/sobre-nos" element={<SobreNos />} />
+              <Route path="/contacto" element={<Contact />} />
+            </Route>
+            {/* Admin Routes — outside Layout to have its own full-screen design */}
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </SiteDataProvider>
   </QueryClientProvider>
 );
 

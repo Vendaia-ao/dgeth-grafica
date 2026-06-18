@@ -4,6 +4,10 @@ import { ArrowRight, Check } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import useGSAP from '@/hooks/useGSAP';
 import { animateTitleReveal, animateCardReveal, animateStatCounters } from '@/lib/gsapAnimations';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+import SEO from '@/components/SEO';
+import { useSiteData } from '@/context/SiteDataContext';
 
 // Images are now referenced directly in the components
 
@@ -51,6 +55,14 @@ const HeroSection = () => {
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
   const heroH1Ref = useRef<HTMLHeadingElement>(null);
+  const { company } = useSiteData();
+
+  // Parse the hero_title: first word is the big top word, rest become secondary lines
+  // Format expected: "WORD1 que WORD2 WORD3" — we keep the layout but use dynamic tagline
+  const heroTitle = company.hero_title || 'IDEIAS que GANHAM FORMA';
+  const titleParts = heroTitle.split(' ');
+  const word1 = titleParts[0] || 'IDEIAS';
+  const word2 = titleParts.slice(1).join(' ') || 'que GANHAM FORMA';
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -63,7 +75,7 @@ const HeroSection = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Efeito 1: title reveal no hero (apenas na palavra principal IDEIAS)
+  // Efeito 1: title reveal no hero (apenas na palavra principal)
   useGSAP(() => {
     animateTitleReveal(heroH1Ref.current);
   }, []);
@@ -89,14 +101,14 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-4 md:gap-x-6 gap-y-4 items-center">
            
-          {/* Word 1: IDEIAS */}
+          {/* Word 1 */}
           <div className="col-span-1 lg:col-span-6 flex items-end justify-start">
             <h1
               ref={heroH1Ref}
               className="font-display font-black text-5xl sm:text-6xl md:text-8xl lg:text-[8rem] text-foreground tracking-tighter leading-[0.8] opacity-0 animate-slide-up"
               style={{ transform: `translate(${mouseX * 0.1}px, ${mouseY * 0.1}px)` }}
             >
-              IDEIAS
+              {word1}
             </h1>
           </div>
 
@@ -104,12 +116,12 @@ const HeroSection = () => {
           <div className="col-span-1 lg:col-span-3 flex items-center opacity-0 animate-slide-up-delay-1">
             <div className="flex flex-col gap-4">
               <p className="text-base sm:text-lg md:text-xl text-foreground/70 font-light leading-relaxed max-w-xs pl-4 border-l-2 border-ns-blue">
-                A solução completa para a comunicação e imagem do seu negócio. Design gráfico, impressão digital e brindes corporativos em Luanda.
+                {company.hero_tagline || 'A solução completa para a comunicação e imagem do seu negócio. Design gráfico, impressão digital e brindes corporativos em Luanda.'}
               </p>
             </div>
           </div>
 
-          {/* Word 2: QUE GANHAM - "que" with italic serif font */}
+          {/* Word 2: remaining words */}
           <div className="col-span-1 lg:col-span-7 flex items-start justify-start">
             <h1
               className="font-display font-black text-5xl sm:text-6xl md:text-8xl lg:text-[8rem] tracking-tighter leading-[0.8] opacity-0 animate-slide-up-delay-2 text-ns-blue/30"
@@ -118,25 +130,19 @@ const HeroSection = () => {
                 WebkitTextStroke: '2px hsl(210 100% 35% / 0.6)',
               }}
             >
-              <span className="gradient-text italic font-serif text-[0.6em] mr-2">que</span>
-              GANHAM
+              {word2.split(' ').length > 1 ? (
+                <><span className="gradient-text italic font-serif text-[0.6em] mr-2">{word2.split(' ')[0]}</span>{word2.split(' ').slice(1, -1).join(' ')}</>
+              ) : word2}
             </h1>
           </div>
 
-          {/* Word 3: FORMA */}
+          {/* Word 3: last word */}
           <div className="col-span-1 lg:col-start-3 lg:col-span-6 flex items-start justify-start lg:justify-center">
             <h1
               className="font-display font-black text-5xl sm:text-6xl md:text-8xl lg:text-[8rem] text-ns-blue tracking-tighter leading-[0.8] relative opacity-0 animate-slide-up-delay-3"
               style={{ transform: `translate(${mouseX * 0.3}px, ${mouseY * 0.3}px)` }}
             >
-              FORMA
-              <svg
-                className="absolute -top-4 -right-8 md:-top-6 md:-right-12 w-10 h-10 md:w-16 md:h-16 text-ns-yellow animate-pulse-slow hidden sm:block drop-shadow-md"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5Z" />
-              </svg>
+              {word2.split(' ').slice(-1)[0] || 'FORMA'}
             </h1>
           </div>
            
@@ -246,14 +252,46 @@ const CounterItem = ({
   );
 };
 
+interface StatItem {
+  id: string | number;
+  prefix: string;
+  value: number;
+  label: string;
+  sublabel: string;
+  sort_order?: number;
+}
+
 // Counters Section — layout artístico com GSAP Efeito 5
 const CountersSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
+  // Buscar estatísticas no Supabase
+  const { data: dbStats } = useQuery<StatItem[]>({
+    queryKey: ['stats_public'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('stats')
+        .select('*')
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const FALLBACK_STATS: StatItem[] = [
+    { id: 1, prefix: '+', value: 300, label: 'Clientes', sublabel: 'Satisfeitos' },
+    { id: 2, prefix: '+', value: 3,   label: 'Anos',     sublabel: 'De experiência' },
+    { id: 3, prefix: '',  value: 7,   label: 'Soluções', sublabel: 'Disponíveis' },
+    { id: 4, prefix: '',  value: 1,   label: 'Localização', sublabel: 'Luanda, Angola' },
+  ];
+
+  const displayStats = dbStats && dbStats.length > 0 ? dbStats : FALLBACK_STATS;
+
   // Efeito 5: stat counters com clip-path reveal + count-up GSAP
   useGSAP(() => {
     animateStatCounters();
-  }, []);
+  }, [displayStats]);
 
   return (
     <section ref={ref} className="relative overflow-hidden bg-background border-b border-border">
@@ -277,12 +315,7 @@ const CountersSection = () => {
 
         {/* Grid de contadores — Efeito 5: cada item tem stat-card, stat-number e data-value */}
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
-          {[
-            { prefix: '+', value: 300, label: 'Clientes', sublabel: 'Satisfeitos' },
-            { prefix: '+', value: 3,   label: 'Anos',     sublabel: 'De experiência' },
-            { prefix: '',  value: 7,   label: 'Soluções', sublabel: 'Disponíveis' },
-            { prefix: '',  value: 1,   label: 'Localização', sublabel: 'Luanda, Angola' },
-          ].map((item, idx) => (
+          {displayStats.map((item, idx) => (
             <div key={idx} className="stat-card flex flex-col items-center justify-center text-center px-6 py-8 relative">
               {/* Linha decorativa animada */}
               <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-0 bg-ns-blue transition-all duration-700 ${isVisible ? 'h-8' : 'h-0'}`}
@@ -406,36 +439,103 @@ const BrandsMarquee = () => {
     );
   };
 
-  // Services Section
+interface ServiceItem {
+  id: string | number;
+  title: string;
+  description: string;
+  image: string;
+  destaque: boolean;
+  sort_order?: number;
+  tags?: string[];
+  rotateClass?: string;
+}
+
+interface TeaserPortfolioItem {
+  id: string | number;
+  title: string;
+  category: string;
+  image: string;
+  destaque: boolean;
+  sort_order?: number;
+}
+
+const getServiceTags = (service: any) => {
+  if (service.tags) return service.tags;
+  const title = service.title.toLowerCase();
+  if (title.includes('brinde')) return ['Canecas', 'T-shirts', 'Kits'];
+  if (title.includes('envelopamento') || title.includes('visual')) return ['Viaturas', 'Montras', 'Paredes'];
+  if (title.includes('vinil') || title.includes('banner')) return ['Lonas', 'Roll ups', 'Adesivos'];
+  if (title.includes('identidade')) return ['Logotipos', 'Cores', 'Branding'];
+  if (title.includes('post') || title.includes('digital')) return ['Social Media', 'Campanhas', 'Anúncios'];
+  if (title.includes('impressão')) return ['Cartões', 'Flyers', 'Catálogos'];
+  if (title.includes('fachada')) return ['Acrílico', 'LED', 'Letreiros'];
+  return ['Qualidade', 'Design', 'Inovação'];
+};
+
+const getRotateClass = (index: number) => {
+  const rotations = ['rotate-0', 'rotate-12', '-rotate-6'];
+  return rotations[index % rotations.length];
+};
+
+// Services Section
 const ServicesSection = () => {
   const { ref, isVisible } = useScrollAnimation();
   const sectionRef = useRef<HTMLElement>(null);
 
+  // Buscar serviços no Supabase
+  const { data: dbServices } = useQuery<ServiceItem[]>({
+    queryKey: ['services_public'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const FALLBACK_SERVICES = [
+    {
+      id: 1,
+      title: 'Brindes Corporativos',
+      description: 'Produção e personalização de brindes exclusivos para a sua marca.',
+      tags: ['Canecas', 'T-shirts', 'Kits'],
+      rotateClass: 'rotate-0',
+      destaque: true,
+      image: '',
+    },
+    {
+      id: 2,
+      title: 'Envelopamento e Comunicação Visual',
+      description: 'Serviços de envelopamento de viaturas e espaços corporativos.',
+      tags: ['Viaturas', 'Montras', 'Paredes'],
+      rotateClass: 'rotate-12',
+      destaque: true,
+      image: '',
+    },
+    {
+      id: 3,
+      title: 'Vinil, Banners e Displays',
+      description: 'Produção de materiais publicitários em grande formato.',
+      tags: ['Lonas', 'Roll ups', 'Adesivos'],
+      rotateClass: '-rotate-6',
+      destaque: true,
+      image: '',
+    },
+  ];
+
+  // Filtrar serviços em destaque
+  const featuredDbServices = dbServices ? dbServices.filter(s => s.destaque) : [];
+  const displayServices = featuredDbServices.length > 0
+    ? featuredDbServices
+    : (dbServices && dbServices.length > 0 ? dbServices.slice(0, 3) : FALLBACK_SERVICES);
+
   // Efeito 2: card overlay reveal nos service-cards
   useGSAP(() => {
     animateCardReveal('.service-card');
-  }, []);
-
-  const services = [
-    {
-      title: 'Brindes Corporativos',
-      desc: 'Produção e personalização de brindes exclusivos para a sua marca.',
-      tags: ['Canecas', 'T-shirts', 'Kits'],
-      rotateClass: 'rotate-0',
-    },
-    {
-      title: 'Envelopamento e Comunicação Visual',
-      desc: 'Serviços de envelopamento de viaturas e espaços corporativos.',
-      tags: ['Viaturas', 'Montras', 'Paredes'],
-      rotateClass: 'rotate-12',
-    },
-    {
-      title: 'Vinil, Banners e Displays',
-      desc: 'Produção de materiais publicitários em grande formato.',
-      tags: ['Lonas', 'Roll ups', 'Adesivos'],
-      rotateClass: '-rotate-6',
-    },
-  ];
+  }, [displayServices]);
 
   return (
     <section ref={ref} className="py-20 md:py-32 relative bg-transparent">
@@ -456,9 +556,9 @@ const ServicesSection = () => {
         </div>
 
         <div className={`grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 stagger-parent ${isVisible ? 'animate-active' : ''}`}>
-          {services.map((service, idx) => (
+          {displayServices.map((service, idx) => (
             <div
-              key={idx}
+              key={service.id || idx}
               className="service-card stagger-item group relative bg-card p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 ease-out-expo border border-border overflow-hidden hover:-translate-y-2"
             >
               {/* Overlay GSAP Efeito 2 */}
@@ -468,7 +568,7 @@ const ServicesSection = () => {
               <div className="card-content">
                 {/* Animated BG Shape */}
                 <div className={`absolute top-0 right-0 p-4 sm:p-6 opacity-10 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out-expo transform origin-top-right`}>
-                  <svg className={`w-24 sm:w-32 h-24 sm:h-32 text-ns-blue ${service.rotateClass}`} fill="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-24 sm:w-32 h-24 sm:h-32 text-ns-blue ${service.rotateClass || getRotateClass(idx)}`} fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" />
                   </svg>
                 </div>
@@ -477,13 +577,13 @@ const ServicesSection = () => {
                   {service.title}
                 </h3>
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-serif italic mb-6 relative z-10">
-                  {service.desc}
+                  {service.description}
                 </p>
 
                 <div className="w-full h-[1px] bg-border mb-6 group-hover:bg-ns-blue/20 transition-colors" />
 
                 <ul className="space-y-2 relative z-10">
-                  {service.tags.map((tag, tagIdx) => (
+                  {getServiceTags(service).map((tag: string, tagIdx: number) => (
                     <li
                       key={tagIdx}
                       className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider group-hover:text-ns-blue transition-all translate-x-0 group-hover:translate-x-2 duration-300"
@@ -507,17 +607,37 @@ const PortfolioTeaser = () => {
   const { ref, isVisible } = useScrollAnimation();
   const portfolioH2Ref = useRef<HTMLHeadingElement>(null);
 
+  // Buscar itens do portfólio no Supabase
+  const { data: dbPortfolio } = useQuery<TeaserPortfolioItem[]>({
+    queryKey: ['portfolio_public'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('portfolio')
+        .select('*')
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const FALLBACK_PORTFOLIO = [
+    { id: 1, title: 'TECSEP Kit Corporativo', category: 'Brindes Corporativos', image: "/imgs/portifolio/port%20(1).jpg", destaque: true },
+    { id: 2, title: 'Cadernos TPA', category: 'Brindes Corporativos', image: "/imgs/portifolio/port%20(2).jpg", destaque: false },
+    { id: 3, title: 'Kit AGT', category: 'Brindes Corporativos', image: "/imgs/portifolio/port%20(3).jpg", destaque: true }
+  ];
+
+  // Filtrar em destaque
+  const featuredDbPortfolio = dbPortfolio ? dbPortfolio.filter(p => p.destaque) : [];
+  const displayPortfolio = featuredDbPortfolio.length > 0
+    ? featuredDbPortfolio.slice(0, 3)
+    : (dbPortfolio && dbPortfolio.length > 0 ? dbPortfolio.slice(0, 3) : FALLBACK_PORTFOLIO);
+
   // Efeito 1 no título + Efeito 2 nos portfolio cards
   useGSAP(() => {
     animateTitleReveal(portfolioH2Ref.current);
     animateCardReveal('.portfolio-card');
-  }, []);
-  
-  const items = [
-    { id: 1, title: 'TECSEP Kit Corporativo', cat: 'Brindes Corporativos', img: "/imgs/portifolio/port%20(1).jpg" },
-    { id: 2, title: 'Cadernos TPA', cat: 'Brindes Corporativos', img: "/imgs/portifolio/port%20(2).jpg" },
-    { id: 3, title: 'Kit AGT', cat: 'Brindes Corporativos', img: "/imgs/portifolio/port%20(3).jpg" }
-  ];
+  }, [displayPortfolio]);
 
   return (
     <section ref={ref} className="py-20 md:py-32 bg-slate-900 text-white relative overflow-hidden">
@@ -547,9 +667,9 @@ const PortfolioTeaser = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 auto-rows-[300px]">
-          {items.map((item, i) => (
+          {displayPortfolio.map((item, i) => (
             <div
-              key={item.id}
+              key={item.id || i}
               className={`portfolio-card group relative overflow-hidden rounded-xl cursor-pointer bg-slate-800 scroll-animate-init reveal-mask-up ${isVisible ? 'animate-active' : ''}`}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
@@ -557,13 +677,13 @@ const PortfolioTeaser = () => {
               <div className="card-overlay" />
               <div className="card-content h-full">
                 <img
-                  src={item.img}
+                  src={item.image}
                   alt={item.title}
                   className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out-expo group-hover:scale-110 opacity-80 group-hover:opacity-100"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
                 <div className="absolute bottom-0 left-0 p-6 sm:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out-back">
-                  <span className="text-ns-cyan text-xs font-bold uppercase tracking-widest mb-1 block">{item.cat}</span>
+                  <span className="text-ns-cyan text-xs font-bold uppercase tracking-widest mb-1 block">{item.category}</span>
                   <h3 className="text-lg sm:text-xl font-display font-bold text-white group-hover:text-ns-yellow transition-colors leading-tight">{item.title}</h3>
                 </div>
               </div>
@@ -682,6 +802,7 @@ const DifferentialsSection = () => {
 // CTA Section
 const CTASection = () => {
   const { ref, isVisible } = useScrollAnimation();
+  const { company } = useSiteData();
 
   return (
     <section ref={ref} className="py-20 md:py-32 bg-ns-blue text-white text-center relative overflow-hidden">
@@ -691,7 +812,7 @@ const CTASection = () => {
       />
       <div className={`container mx-auto px-4 sm:px-6 relative z-10 scroll-animate-init reveal-scale ${isVisible ? 'animate-active' : ''}`}>
         <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-black mb-6 sm:mb-8 leading-tight">
-          Pronto para dar forma <br className="hidden sm:block" /> à sua próxima ideia?
+          {company.cta_title || 'Pronto para dar forma à sua próxima ideia?'}
         </h2>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
           <Link
@@ -712,6 +833,11 @@ const CTASection = () => {
 const Home = () => {
   return (
     <>
+      <SEO
+        pagePath="/"
+        defaultTitle="Dgeth Gráfica — Comunicação & Imagem"
+        defaultDescription="A solução completa para a comunicação e imagem do seu negócio em Luanda. Design gráfico, impressão e brindes corporativos."
+      />
       <HeroSection />
       <CountersSection />
       <ServicesSection />

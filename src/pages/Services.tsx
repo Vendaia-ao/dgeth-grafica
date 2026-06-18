@@ -4,6 +4,18 @@ import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import useGSAP from '@/hooks/useGSAP';
 import { animateTitleReveal } from '@/lib/gsapAnimations';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+import SEO from '@/components/SEO';
+
+interface Service {
+  id: string | number;
+  title: string;
+  description: string;
+  image: string;
+  destaque: boolean;
+  sort_order?: number;
+}
 
 // Use images from /imgs/portifolio
 const img1 = "/imgs/portifolio/port%20(1).jpg";
@@ -14,7 +26,7 @@ const img5 = "/imgs/portifolio/port%20(5).jpg";
 const img6 = "/imgs/portifolio/port%20(6).jpg";
 const img7 = "/imgs/portifolio/port%20(7).jpg";
 
-const services = [
+const FALLBACK_SERVICES: Service[] = [
   {
     id: 1,
     title: 'Identidade Visual',
@@ -66,7 +78,7 @@ const services = [
   },
 ];
 
-const ServiceCard = ({ service, index }: { service: typeof services[0]; index: number }) => {
+const ServiceCard = ({ service, index }: { service: Service; index: number }) => {
   const { ref, isVisible } = useScrollAnimation();
   const isEven = index % 2 === 0;
   const isDarkSection = index % 2 === 0;
@@ -175,82 +187,105 @@ const Services = () => {
   const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation();
   const servicesH2Ref = useRef<HTMLHeadingElement>(null);
 
+  // Buscar serviços no Supabase
+  const { data: dbServices } = useQuery<Service[]>({
+    queryKey: ['services_public'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const displayServices = dbServices && dbServices.length > 0 ? dbServices : FALLBACK_SERVICES;
+
   // Efeito 1: title reveal no h2 do hero
   useGSAP(() => {
     animateTitleReveal(servicesH2Ref.current);
   }, []);
 
   return (
-    <section id="services" className="relative min-h-screen z-20">
-      {/* Header Section */}
-      <div className="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-          }}
-        />
-        <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-ns-blue opacity-20 blur-[120px] rounded-full mix-blend-screen animate-pulse-slow" />
-        
-        <div className="container mx-auto px-6 relative z-10">
+    <>
+      <SEO
+        pagePath="/servicos"
+        defaultTitle="Serviços — Dgeth Gráfica"
+        defaultDescription="Oferecemos soluções completas em comunicação visual, brindes corporativos e impressões de alta qualidade."
+      />
+      <section id="services" className="relative min-h-screen z-20">
+        {/* Header Section */}
+        <div className="bg-slate-900 pt-32 pb-20 relative overflow-hidden">
           <div
-            ref={headerRef}
-            className={`max-w-4xl scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
-          >
-            <span className="block text-ns-cyan font-bold tracking-[0.2em] text-sm mb-4 uppercase">
-              A Solução Completa
-            </span>
-            <h2 ref={servicesH2Ref} className="text-5xl md:text-7xl font-display font-black text-white leading-[0.9] mb-8">
-              A solução completa para<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-ns-cyan to-white italic font-serif font-light pr-4">
-                a sua comunicação.
-              </span>
-            </h2>
-            <p className="text-xl text-slate-300 max-w-xl leading-relaxed">
-              Unimos design criativo e tecnologia de impressão para entregar produtos que elevam a imagem do seu negócio.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Services List - Each service has its own background */}
-      <div className="flex flex-col">
-        {services.map((service, index) => (
-          <ServiceCard key={service.id} service={service} index={index} />
-        ))}
-      </div>
-
-      {/* Final CTA Block */}
-      <div className="bg-background py-20">
-        <div className="container mx-auto px-6">
-          <div
-            ref={ctaRef}
-            className={`relative bg-gradient-to-br from-ns-blue to-ns-dark rounded-3xl p-12 md:p-24 overflow-hidden text-center border border-white/10 scroll-animate-init reveal-scale ${ctaVisible ? 'animate-active' : ''}`}
-          >
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+            }}
+          />
+          <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-ns-blue opacity-20 blur-[120px] rounded-full mix-blend-screen animate-pulse-slow" />
+          
+          <div className="container mx-auto px-6 relative z-10">
             <div
-              className="absolute inset-0 opacity-20 animate-float"
-              style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/cubes.png')" }}
-            />
-            <div className="relative z-10">
-              <h3 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
-                Pronto para transformar o seu negócio?
-              </h3>
-              <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto">
-                Na Dgeth Gráfica, trabalhamos com rapidez, qualidade e durabilidade. Peça o seu orçamento!
+              ref={headerRef}
+              className={`max-w-4xl scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
+            >
+              <span className="block text-ns-cyan font-bold tracking-[0.2em] text-sm mb-4 uppercase">
+                A Solução Completa
+              </span>
+              <h2 ref={servicesH2Ref} className="text-5xl md:text-7xl font-display font-black text-white leading-[0.9] mb-8">
+                A solução completa para<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-ns-cyan to-white italic font-serif font-light pr-4">
+                  a sua comunicação.
+                </span>
+              </h2>
+              <p className="text-xl text-slate-300 max-w-xl leading-relaxed">
+                Unimos design criativo e tecnologia de impressão para entregar produtos que elevam a imagem do seu negócio.
               </p>
-              <Link
-                to="/contacto"
-                className="btn-bold inline-block px-10 py-4 bg-ns-yellow text-slate-900 font-bold rounded-full hover:text-slate-900 transition-colors shadow-lg"
-              >
-                Solicitar Orçamento
-              </Link>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+
+        {/* Services List - Each service has its own background */}
+        <div className="flex flex-col">
+          {displayServices.map((service, index) => (
+            <ServiceCard key={service.id} service={service} index={index} />
+          ))}
+        </div>
+
+        {/* Final CTA Block */}
+        <div className="bg-background py-20">
+          <div className="container mx-auto px-6">
+            <div
+              ref={ctaRef}
+              className={`relative bg-gradient-to-br from-ns-blue to-ns-dark rounded-3xl p-12 md:p-24 overflow-hidden text-center border border-white/10 scroll-animate-init reveal-scale ${ctaVisible ? 'animate-active' : ''}`}
+            >
+              <div
+                className="absolute inset-0 opacity-20 animate-float"
+                style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/cubes.png')" }}
+              />
+              <div className="relative z-10">
+                <h3 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
+                  Pronto para transformar o seu negócio?
+                </h3>
+                <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto">
+                  Na Dgeth Gráfica, trabalhamos com rapidez, qualidade e durabilidade. Peça o seu orçamento!
+                </p>
+                <Link
+                  to="/contacto"
+                  className="btn-bold inline-block px-10 py-4 bg-ns-yellow text-slate-900 font-bold rounded-full hover:text-slate-900 transition-colors shadow-lg"
+                >
+                  Solicitar Orçamento
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 };
 

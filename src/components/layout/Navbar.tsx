@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
+
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { company } = useSiteData();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,9 +50,9 @@ const Navbar = () => {
         {/* Logo - Dgeth Gráfica logo */}
         <Link to="/" className="flex items-center gap-2 group cursor-pointer">
           <img 
-            src="/imgs/logotipos/logo-azul.png" 
-            alt="Dgeth Gráfica" 
-            className="h-10 sm:h-12 md:h-14 w-auto object-contain"
+            src={company.logo_url || '/imgs/logotipos/logo-azul.png'} 
+            alt={company.name || 'Dgeth Gráfica'} 
+            className="h-12 sm:h-14 md:h-16 w-auto object-contain"
           />
         </Link>
 
