@@ -171,8 +171,12 @@ const Footer = () => {
       {/* Legal */}
       <div className="relative z-10 border-t border-white/5 bg-black/20">
         <div className="container mx-auto px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-slate-500 text-sm font-medium">
-            © {currentYear} Dgeth Gráfica. Todos os direitos reservados.
+          <p className="text-slate-500 text-sm font-medium flex flex-wrap items-center justify-center sm:justify-start gap-x-2 gap-y-1">
+            <span>© {currentYear} Dgeth Gráfica. Todos os direitos reservados.</span>
+            <span className="hidden sm:inline text-slate-700">•</span>
+            <Link to="/politica-de-privacidade" className="hover:text-ns-blue transition-colors duration-300 font-semibold">
+              Política de Privacidade
+            </Link>
           </p>
           <p className="text-slate-600 text-xs font-medium">
             Desenvolvido por{' '}

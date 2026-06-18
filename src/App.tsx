@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import Portfolio from "./pages/Portfolio";
 import SobreNos from "./pages/SobreNos";
 import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import Login from "./pages/admin/Login";
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/sobre-nos" element={<SobreNos />} />
               <Route path="/contacto" element={<Contact />} />
+              <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />
             </Route>
             {/* Admin Routes — outside Layout to have its own full-screen design */}
             <Route path="/admin/login" element={<Login />} />

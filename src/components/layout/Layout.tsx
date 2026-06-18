@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppButton from './WhatsAppButton';
 import Background from './Background';
+import CookieBanner from '@/components/CookieBanner';
 
 const Layout = () => {
   return (
@@ -14,6 +15,7 @@ const Layout = () => {
       </main>
       <Footer />
       <WhatsAppButton />
+      <CookieBanner />
     </>
   );
 };
