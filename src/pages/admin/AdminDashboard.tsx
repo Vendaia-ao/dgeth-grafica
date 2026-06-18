@@ -8,13 +8,14 @@ import ContactsSettings from './ContactsSettings';
 import StatsSettings from './StatsSettings';
 import LeadsSettings from './LeadsSettings';
 import { Button } from '@/components/ui/button';
-import { Building, Image, Settings, Phone, BarChart2, LogOut, MessageSquare } from 'lucide-react';
+import { Building, Image, Settings, Phone, BarChart2, LogOut, MessageSquare, Menu, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 type AdminTab = 'company' | 'services' | 'portfolio' | 'contacts' | 'stats' | 'leads';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('company');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -39,18 +40,57 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col md:flex-row">
+    <div className="min-h-screen bg-slate-950 text-white flex flex-col md:flex-row relative">
+      
+      {/* Mobile Header (Hamburger Menu) */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div className="flex items-center gap-3">
+          <img 
+            src="/imgs/logotipos/logo-branco.png" 
+            alt="Dgeth Logo" 
+            className="h-7 w-auto object-contain"
+          />
+          <span className="font-display font-black text-xs text-ns-blue uppercase tracking-widest">Painel</span>
+        </div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+          className="text-slate-300 focus:outline-none p-1"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Overlay for mobile menu */}
+      {isMobileMenuOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-slate-900 border-r border-slate-800 p-6 flex flex-col justify-between flex-shrink-0">
+      <aside className={`
+        fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-slate-900 border-r border-slate-800 p-6 flex flex-col justify-between flex-shrink-0
+        transform transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
         <div>
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-8 border-b border-slate-800 pb-4">
+          {/* Header Desktop*/}
+          <div className="hidden md:flex items-center gap-3 mb-8 border-b border-slate-800 pb-4">
             <img 
               src="/imgs/logotipos/logo-branco.png" 
               alt="Dgeth Logo" 
               className="h-8 w-auto object-contain"
             />
             <span className="font-display font-black text-sm text-ns-blue uppercase tracking-widest">Painel</span>
+          </div>
+          
+          {/* Mobile Header inside Sidebar */}
+          <div className="md:hidden flex items-center justify-between mb-8 border-b border-slate-800 pb-4">
+             <span className="font-display font-black text-sm text-white uppercase tracking-widest">Menu</span>
+             <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-400">
+               <X className="w-5 h-5" />
+             </button>
           </div>
 
           {/* Nav Links */}
@@ -61,7 +101,10 @@ const AdminDashboard = () => {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id as AdminTab)}
+                  onClick={() => {
+                    setActiveTab(item.id as AdminTab);
+                    setIsMobileMenuOpen(false); // fecha o menu no mobile ao clicar
+                  }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all ${
                     isActive
                       ? 'bg-ns-blue text-white shadow-lg shadow-ns-blue/20'
@@ -90,8 +133,8 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto max-h-screen">
-        <div className="bg-slate-900/40 p-6 md:p-8 rounded-2xl border border-slate-800/80">
+      <main className="flex-1 p-4 md:p-10 overflow-y-auto max-h-screen">
+        <div className="bg-slate-900/40 p-4 md:p-8 rounded-2xl border border-slate-800/80">
           {activeTab === 'company' && <CompanySettings />}
           {activeTab === 'services' && <ServicesSettings />}
           {activeTab === 'portfolio' && <PortfolioSettings />}
