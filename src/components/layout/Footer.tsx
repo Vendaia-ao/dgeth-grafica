@@ -24,7 +24,7 @@ const Footer = () => {
                 <img 
                   src={company.logo_branco_url || '/imgs/logotipos/logo-branco.png'} 
                   alt={company.name || 'Dgeth Gráfica'} 
-                  className="h-14 w-auto object-contain"
+                  className="h-20 w-auto object-contain"
                 />
               </Link>
               <p className="text-xl text-slate-400 font-light max-w-sm leading-relaxed">

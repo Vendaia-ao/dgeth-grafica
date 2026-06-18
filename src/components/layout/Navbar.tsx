@@ -52,7 +52,7 @@ const Navbar = () => {
           <img 
             src={company.logo_url || '/imgs/logotipos/logo-azul.png'} 
             alt={company.name || 'Dgeth Gráfica'} 
-            className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+            className="h-14 sm:h-16 md:h-20 w-auto object-contain"
           />
         </Link>
 
