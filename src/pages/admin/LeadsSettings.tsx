@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Loader2, Mail, Phone, Calendar, Download, FileText, CheckCircle, Clock, Archive, MoreVertical } from 'lucide-react';
+import { Loader2, Mail, Phone, Calendar, Download, FileText, CheckCircle, Clock, Archive, MoreVertical, Trash2 } from 'lucide-react';
 
 interface Lead {
   id: string;
@@ -59,6 +59,24 @@ const LeadsSettings = () => {
     } catch (err: any) {
       console.error(err);
       toast.error('Erro ao atualizar estado: ' + err.message);
+    }
+  };
+
+  const handleDeleteLead = async (id: string) => {
+    if (!window.confirm('Tem a certeza que deseja eliminar permanentemente este lead/orçamento? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      toast.success('Lead eliminado com sucesso!');
+      setLeads(prev => prev.filter(l => l.id !== id));
+    } catch (err: any) {
+      console.error(err);
+      toast.error('Erro ao eliminar lead: ' + err.message);
     }
   };
 
@@ -130,6 +148,9 @@ const LeadsSettings = () => {
                         Arquivar
                       </Button>
                     )}
+                    <Button size="sm" variant="ghost" onClick={() => handleDeleteLead(lead.id)} className="text-red-400 hover:text-red-300 hover:bg-red-950/20 px-2">
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </CardHeader>

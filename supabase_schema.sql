@@ -293,3 +293,45 @@ create policy "Allow public insert on uploads" on storage.objects
 
 create policy "Allow authenticated delete on uploads" on storage.objects
   for delete using (bucket_id = 'uploads' and auth.role() = 'authenticated');
+
+-- =========================================================================
+-- 10. Gestão de Utilizadores e Permissões (Admin View & RPC)
+-- =========================================================================
+
+-- Tabela para gerir os acessos a cada aba do painel
+create table if not exists public.user_permissions (
+    user_id uuid references auth.users(id) on delete cascade primary key,
+    permissions jsonb default '["company", "services", "portfolio", "contacts", "stats", "leads", "users"]'::jsonb
+);
+
+alter table public.user_permissions enable row level security;
+create policy "Allow auth users to read permissions" on public.user_permissions for select using (auth.role() = 'authenticated');
+create policy "Allow auth users to update permissions" on public.user_permissions for update using (auth.role() = 'authenticated');
+create policy "Allow auth users to insert permissions" on public.user_permissions for insert with check (auth.role() = 'authenticated');
+create policy "Allow auth users to delete permissions" on public.user_permissions for delete using (auth.role() = 'authenticated');
+
+-- View para expor os dados dos utilizadores autenticados para o frontend (incluindo as permissões)
+create or replace view public.profiles as
+select 
+  u.id, 
+  u.email, 
+  u.created_at, 
+  u.last_sign_in_at,
+  coalesce(p.permissions, '["company", "services", "portfolio", "contacts", "stats", "leads", "users"]'::jsonb) as permissions
+from auth.users u
+left join public.user_permissions p on u.id = p.user_id;
+
+-- Apenas utilizadores autenticados podem ver a lista de perfis
+grant select on public.profiles to authenticated;
+
+-- Função para eliminar utilizadores de forma segura (chama o delete interno do auth.users)
+create or replace function public.delete_user(user_id uuid)
+returns void as $$
+begin
+  delete from auth.users where id = user_id;
+end;
+$$ language plpgsql security definer;
+
+-- Permite aos utilizadores autenticados executarem a função
+grant execute on function public.delete_user(uuid) to authenticated;
+
