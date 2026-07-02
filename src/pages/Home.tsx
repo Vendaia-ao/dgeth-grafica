@@ -98,7 +98,7 @@ const HeroSection = () => {
       {/* Floating animated shapes */}
       <FloatingShapes />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-14 sm:mt-20 lg:mt-32">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-8 sm:mt-20 lg:mt-32">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-4 md:gap-x-6 gap-y-4 items-center">
            
           {/* Word 1 */}
