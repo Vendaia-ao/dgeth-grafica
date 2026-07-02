@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import useGSAP from '@/hooks/useGSAP';
-import { animateTitleReveal, animateCardReveal } from '@/lib/gsapAnimations';
+import { animateTitleReveal } from '@/lib/gsapAnimations';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import SEO from '@/components/SEO';
@@ -69,10 +69,9 @@ const Portfolio = () => {
 
   const displayProjects = dbProjects && dbProjects.length > 0 ? dbProjects : FALLBACK_PROJECTS;
 
-  // Efeito 1: title reveal + Efeito 2: card overlay reveal
+  // Efeito 1: title reveal
   useGSAP(() => {
     animateTitleReveal(portfolioTitleRef.current);
-    animateCardReveal('.portfolio-item-card');
   }, []);
 
   // Calcular quais categorias têm 4 ou mais items
@@ -182,8 +181,6 @@ const Portfolio = () => {
                   className={`portfolio-item-card group relative overflow-hidden bg-muted cursor-pointer transition-all duration-500 hover:shadow-xl hover:-translate-y-1 break-inside-avoid scroll-animate-init reveal-up ${headerVisible ? 'animate-active' : ''}`}
                   style={{ transitionDelay: `${(index % 4) * 100}ms` }}
                 >
-                  {/* Overlay GSAP Efeito 2 */}
-                  <div className="card-overlay" />
                   <div className="card-content">
                     {/* Image */}
                     <img
