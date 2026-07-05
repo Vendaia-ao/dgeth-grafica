@@ -177,28 +177,36 @@ const Contact = () => {
                 </a>
 
               {/* Email Card */}
-                <div className="stagger-item flex items-center gap-4 group p-6 rounded-2xl bg-card shadow-sm border border-border">
-                  <div className="w-14 h-14 rounded-full bg-ns-blue/10 flex items-center justify-center text-ns-blue">
+                <a 
+                  href={`mailto:${contacts.email}`}
+                  className="stagger-item flex items-center gap-4 group cursor-pointer p-6 rounded-2xl bg-card shadow-sm hover:shadow-xl transition-all border border-border hover:border-ns-blue/20 transform hover:-translate-y-1"
+                >
+                  <div className="w-14 h-14 rounded-full bg-ns-blue/10 flex items-center justify-center text-ns-blue group-hover:scale-110 transition-transform">
                     <Mail className="w-7 h-7" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Email</p>
-                    <p className="text-lg font-semibold text-foreground break-all">{contacts.email}</p>
+                    <p className="text-lg font-semibold text-foreground break-all group-hover:text-ns-blue transition-colors">{contacts.email}</p>
                   </div>
-                </div>
+                </a>
 
               {/* Location Card */}
-                <div className="stagger-item flex items-center gap-4 group p-6 rounded-2xl bg-card shadow-sm border border-border">
-                  <div className="w-14 h-14 rounded-full bg-ns-blue/10 flex items-center justify-center text-ns-blue">
+                <a 
+                  href="https://maps.google.com?q=Dgeth%20Gr%C3%A1fica,%20Kinaxixi,%20R.%20da%20Miss%C3%A3o,%20Luanda&ftid=0x1a51f3cc02f75d67:0x8fa7dfcb4adba8d6&entry=gps&shh=CAE&lucs=,94297699,100820695,94231188,94280568,47071704,94218641,94282134,100813469,94286869&g_st=iw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="stagger-item flex items-center gap-4 group cursor-pointer p-6 rounded-2xl bg-card shadow-sm hover:shadow-xl transition-all border border-border hover:border-ns-blue/20 transform hover:-translate-y-1"
+                >
+                  <div className="w-14 h-14 rounded-full bg-ns-blue/10 flex items-center justify-center text-ns-blue group-hover:scale-110 transition-transform">
                     <MapPin className="w-7 h-7" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Localização</p>
-                    <p className="text-lg font-semibold text-foreground">
+                    <p className="text-lg font-semibold text-foreground group-hover:text-ns-blue transition-colors">
                       {contacts.address}
                     </p>
                   </div>
-                </div>
+                </a>
 
                 {/* Horário Card */}
                 <div className="stagger-item flex items-center gap-4 group p-6 rounded-2xl bg-card shadow-sm border border-border">

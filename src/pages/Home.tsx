@@ -559,7 +559,7 @@ const ServicesSection = () => {
           {displayServices.map((service, idx) => (
             <div
               key={service.id || idx}
-              className="service-card stagger-item group relative bg-card p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 ease-out-expo border border-border overflow-hidden hover:-translate-y-2"
+              className="service-card stagger-item group relative bg-card p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-2xl hover:border-ns-blue transition-all duration-500 ease-out-expo border border-border overflow-hidden hover:-translate-y-2"
             >
               {/* Overlay GSAP Efeito 2 */}
               <div className="card-overlay" />
@@ -567,7 +567,7 @@ const ServicesSection = () => {
               {/* Conteúdo do card */}
               <div className="card-content">
                 {/* Animated BG Shape */}
-                <div className={`absolute top-0 right-0 p-4 sm:p-6 opacity-10 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out-expo transform origin-top-right`}>
+                <div className={`absolute bottom-0 right-0 p-4 sm:p-6 opacity-10 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out-expo transform origin-bottom-right`}>
                   <svg className={`w-24 sm:w-32 h-24 sm:h-32 text-ns-blue ${service.rotateClass || getRotateClass(idx)}`} fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" />
                   </svg>

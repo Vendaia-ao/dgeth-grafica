@@ -33,18 +33,6 @@ const Footer = () => {
 
               {/* Redes Sociais */}
               <div className="flex gap-3 pt-2">
-                {/* Facebook */}
-                <a
-                  href={contacts.facebook_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-[#1877F2] hover:text-white transition-all duration-300 hover:scale-110"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
-                  </svg>
-                </a>
                 {/* Instagram — ícone oficial */}
                 <a
                   href={contacts.instagram_url}
@@ -135,23 +123,35 @@ const Footer = () => {
                     </div>
                   </a>
                 </li>
-                <li className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-400 font-bold uppercase">Email</p>
-                    <p className="text-white font-bold">{contacts.email}</p>
-                  </div>
+                <li>
+                  <a
+                    href={`mailto:${contacts.email}`}
+                    className="flex items-center gap-4 group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center group-hover:bg-ns-blue group-hover:text-white transition-all">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 font-bold uppercase">Email</p>
+                      <p className="text-white font-bold group-hover:text-ns-blue transition-colors">{contacts.email}</p>
+                    </div>
+                  </a>
                 </li>
-                <li className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-400 font-bold uppercase">Localização</p>
-                    <p className="text-white font-bold">{contacts.address}</p>
-                  </div>
+                <li>
+                  <a
+                    href="https://maps.google.com?q=Dgeth%20Gr%C3%A1fica,%20Kinaxixi,%20R.%20da%20Miss%C3%A3o,%20Luanda&ftid=0x1a51f3cc02f75d67:0x8fa7dfcb4adba8d6&entry=gps&shh=CAE&lucs=,94297699,100820695,94231188,94280568,47071704,94218641,94282134,100813469,94286869&g_st=iw"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center group-hover:bg-ns-blue group-hover:text-white transition-all">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 font-bold uppercase">Localização</p>
+                      <p className="text-white font-bold group-hover:text-ns-blue transition-colors">{contacts.address}</p>
+                    </div>
+                  </a>
                 </li>
                 <li className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">

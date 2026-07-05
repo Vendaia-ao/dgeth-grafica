@@ -81,7 +81,7 @@ const Portfolio = () => {
   }, {} as Record<string, number>);
 
   const visibleCategories = ALL_CATEGORIES.filter(
-    cat => cat === 'Todos' || (categoryCounts[cat] && categoryCounts[cat] >= 4)
+    cat => cat === 'Todos' || (categoryCounts[cat] && categoryCounts[cat] >= 1)
   );
 
   const filteredProjects = activeCategory === 'Todos' 

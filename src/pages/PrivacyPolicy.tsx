@@ -192,7 +192,7 @@ const PrivacyPolicy = () => {
                     Para exercer os seus direitos ou esclarecer qualquer dúvida sobre a nossa política de privacidade, pode contactar-nos diretamente através de:
                   </p>
                   <div className="bg-card border border-border p-5 rounded-xl space-y-2 mt-4 font-normal">
-                    <p className="text-sm text-foreground"><span className="text-muted-foreground font-bold uppercase tracking-wider text-xs block">Email</span> {contacts.email || 'geral@dgeth.com'}</p>
+                    <p className="text-sm text-foreground"><span className="text-muted-foreground font-bold uppercase tracking-wider text-xs block">Email</span> <a href={`mailto:${contacts.email || 'geral@dgeth.com'}`} className="hover:text-ns-blue transition-colors">{contacts.email || 'geral@dgeth.com'}</a></p>
                     <p className="text-sm text-foreground"><span className="text-muted-foreground font-bold uppercase tracking-wider text-xs block">Telefone</span> {contacts.phone || 'Angola'}</p>
                     <p className="text-sm text-foreground"><span className="text-muted-foreground font-bold uppercase tracking-wider text-xs block">Endereço</span> {contacts.address || 'Luanda, Angola'}</p>
                   </div>
