@@ -472,18 +472,18 @@ const CompanySettings = () => {
                 
                 {/* Preview */}
                 <div className="md:col-span-5 flex flex-col items-center justify-center">
-                  <div className="relative w-full rounded-lg overflow-hidden border border-slate-800 bg-slate-900 shadow-inner group p-2.5 flex flex-col items-center justify-center min-h-[160px]">
+                  <div className="relative w-fit max-w-full rounded-lg overflow-hidden border border-slate-800 bg-slate-900 shadow-inner group p-1 flex flex-col items-center justify-center">
                     <img
                       src={whyChooseImage || '/imgs/portifolio/port (9).jpg'}
                       alt="Pré-visualização"
-                      className="w-full h-auto max-h-48 object-contain rounded group-hover:scale-[1.02] transition-transform duration-300"
+                      className="w-auto h-auto max-h-48 max-w-full object-contain rounded block"
                       onError={(e) => {
                         // fallback se a imagem falhar
                         (e.target as HTMLImageElement).src = '/imgs/portifolio/port (9).jpg';
                       }}
                     />
-                    <span className="mt-2 text-[11px] font-medium text-slate-400 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800/80">
-                      Pré-visualização (completa)
+                    <span className="mt-1 text-[11px] font-medium text-slate-400 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800/80">
+                      Pré-visualização
                     </span>
                   </div>
                 </div>
