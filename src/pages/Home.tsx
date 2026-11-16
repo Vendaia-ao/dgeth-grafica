@@ -816,12 +816,18 @@ const DifferentialsSection = () => {
             </div>
           </div>
           <div className={`flex items-center justify-center md:justify-end scroll-animate-init reveal-scale ${isVisible ? 'animate-active' : ''}`} style={{ transitionDelay: '200ms' }}>
-            <div className="relative w-fit rounded-2xl overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.02]">
-              <img
-                src={image}
-                className="w-auto h-auto max-h-[520px] max-w-full block rounded-2xl shadow-xl"
-                alt={title}
-              />
+            <div className="relative w-fit">
+              {/* Card decorativo azul por trás da imagem */}
+              <div className="absolute inset-0 bg-ns-blue rounded-2xl transform rotate-3 translate-x-2.5 -translate-y-2.5 animate-float-random opacity-25" />
+              
+              {/* Card da imagem ajustado estritamente à imagem (sem margens extras) */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-0 hover:scale-[1.02]">
+                <img
+                  src={image}
+                  className="w-auto h-auto max-h-[520px] max-w-full block rounded-2xl shadow-xl"
+                  alt={title}
+                />
+              </div>
             </div>
           </div>
         </div>
