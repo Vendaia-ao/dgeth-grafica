@@ -735,44 +735,76 @@ const ProcessSection = () => {
 };
 
 // Differentials Section
+const DIFFERENTIAL_ICONS: Record<string, string> = {
+  package: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
+  sparkles: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
+  clock: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+  users: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
+  shield: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+  printer: 'M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z',
+  award: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
+  heart: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z',
+  check: 'M5 13l4 4L19 7',
+};
+
+const defaultIconPaths = [
+  DIFFERENTIAL_ICONS.package,
+  DIFFERENTIAL_ICONS.sparkles,
+  DIFFERENTIAL_ICONS.clock,
+  DIFFERENTIAL_ICONS.users,
+];
+
 const DifferentialsSection = () => {
   const { ref, isVisible } = useScrollAnimation();
-  
-  const differentials = [
-    {
-      title: 'Tudo num só lugar',
-      desc: 'Do design à entrega final, centralizamos o processo para garantir consistência.',
-      iconPath: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
-    },
-    {
-      title: 'Acabamento profissional',
-      desc: 'Verniz, corte especial, hot stamping. Detalhes que elevam o valor percebido.',
-      iconPath: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
-    },
-    {
-      title: 'Prazos cumpridos',
-      desc: 'Respeitamos o seu cronograma. Sabemos que em negócios, tempo é dinheiro.',
-      iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
-    },
-    {
-      title: 'Atendimento próximo',
-      desc: 'Consultores reais prontos para resolver, no WhatsApp ou presencialmente.',
-      iconPath: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
-    },
-  ];
+  const { company } = useSiteData();
+
+  const title = company.why_choose_title || 'Porquê escolher a Dgeth Gráfica?';
+  const image = company.why_choose_image || '/imgs/portifolio/port (9).jpg';
+  const differentials = (company.why_choose_items && company.why_choose_items.length > 0)
+    ? company.why_choose_items
+    : [
+        {
+          title: 'Tudo num só lugar',
+          desc: 'Do design à entrega final, centralizamos o processo para garantir consistência.',
+          icon: 'package',
+        },
+        {
+          title: 'Acabamento profissional',
+          desc: 'Verniz, corte especial, hot stamping. Detalhes que elevam o valor percebido.',
+          icon: 'sparkles',
+        },
+        {
+          title: 'Prazos cumpridos',
+          desc: 'Respeitamos o seu cronograma. Sabemos que em negócios, tempo é dinheiro.',
+          icon: 'clock',
+        },
+        {
+          title: 'Atendimento próximo',
+          desc: 'Consultores reais prontos para resolver, no WhatsApp ou presencialmente.',
+          icon: 'users',
+        },
+      ];
+
+  const getIconPath = (diff: { icon?: string; iconPath?: string }, idx: number) => {
+    if (diff.iconPath) return diff.iconPath;
+    if (diff.icon && DIFFERENTIAL_ICONS[diff.icon]) return DIFFERENTIAL_ICONS[diff.icon];
+    return defaultIconPaths[idx % defaultIconPaths.length];
+  };
 
   return (
     <section ref={ref} className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           <div className={`scroll-animate-init reveal-mask-left ${isVisible ? 'animate-active' : ''}`}>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-foreground mb-8">Porquê escolher a Dgeth Gráfica?</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-foreground mb-8">
+              {title}
+            </h2>
             <div className={`space-y-6 sm:space-y-8 stagger-parent ${isVisible ? 'animate-active' : ''}`}>
               {differentials.map((diff, idx) => (
                 <div key={idx} className="stagger-item flex gap-4 sm:gap-5 group">
                   <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-ns-blue/10 flex items-center justify-center text-ns-blue group-hover:bg-ns-blue group-hover:text-white transition-colors duration-300">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={diff.iconPath} />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={getIconPath(diff, idx)} />
                     </svg>
                   </div>
                   <div>
@@ -787,9 +819,9 @@ const DifferentialsSection = () => {
             <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-ns-blue rounded-2xl transform rotate-3 animate-float-random opacity-20" />
             <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-slate-900 rounded-2xl transform -rotate-2 overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-0 hover:scale-105">
               <img
-                src="/imgs/portifolio/port (9).jpg"
+                src={image}
                 className="w-full h-full object-cover opacity-80"
-                alt="Qualidade NS"
+                alt={title}
               />
             </div>
           </div>

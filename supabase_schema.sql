@@ -18,6 +18,17 @@ create table if not exists public.company_info (
     logo_url text default '/imgs/logotipos/logo-azul.png',
     logo_branco_url text default '/imgs/logotipos/logo-branco.png',
     values jsonb default '[]'::jsonb,
+    hero_title text default 'IDEIAS que GANHAM FORMA',
+    hero_tagline text default 'A solução completa para a comunicação e imagem do seu negócio. Design gráfico, impressão digital e brindes corporativos em Luanda.',
+    cta_title text default 'Pronto para dar forma à sua próxima ideia?',
+    why_choose_title text default 'Porquê escolher a Dgeth Gráfica?',
+    why_choose_image text default '/imgs/portifolio/port (9).jpg',
+    why_choose_items jsonb default '[
+      {"title": "Tudo num só lugar", "desc": "Do design à entrega final, centralizamos o processo para garantir consistência.", "icon": "package"},
+      {"title": "Acabamento profissional", "desc": "Verniz, corte especial, hot stamping. Detalhes que elevam o valor percebido.", "icon": "sparkles"},
+      {"title": "Prazos cumpridos", "desc": "Respeitamos o seu cronograma. Sabemos que em negócios, tempo é dinheiro.", "icon": "clock"},
+      {"title": "Atendimento próximo", "desc": "Consultores reais prontos para resolver, no WhatsApp ou presencialmente.", "icon": "users"}
+    ]'::jsonb,
     constraint only_one_row check (id = 1)
 );
 
@@ -235,13 +246,21 @@ create policy "Allow authenticated delete on portfolio" on storage.objects for d
 create policy "Allow authenticated delete on services" on storage.objects for delete using (bucket_id = 'services' and auth.role() = 'authenticated');
 
 -- =========================================================================
--- 7. Campos Hero e CTA na tabela company_info (EXECUTAR SE TABELA JÁ EXISTIR)
+-- 7. Campos Hero, CTA e Porquê Escolher na tabela company_info (EXECUTAR SE TABELA JÁ EXISTIR)
 -- =========================================================================
 
 alter table public.company_info
   add column if not exists hero_title text default 'IDEIAS que GANHAM FORMA',
   add column if not exists hero_tagline text default 'A solução completa para a comunicação e imagem do seu negócio. Design gráfico, impressão digital e brindes corporativos em Luanda.',
-  add column if not exists cta_title text default 'Pronto para dar forma à sua próxima ideia?';
+  add column if not exists cta_title text default 'Pronto para dar forma à sua próxima ideia?',
+  add column if not exists why_choose_title text default 'Porquê escolher a Dgeth Gráfica?',
+  add column if not exists why_choose_image text default '/imgs/portifolio/port (9).jpg',
+  add column if not exists why_choose_items jsonb default '[
+    {"title": "Tudo num só lugar", "desc": "Do design à entrega final, centralizamos o processo para garantir consistência.", "icon": "package"},
+    {"title": "Acabamento profissional", "desc": "Verniz, corte especial, hot stamping. Detalhes que elevam o valor percebido.", "icon": "sparkles"},
+    {"title": "Prazos cumpridos", "desc": "Respeitamos o seu cronograma. Sabemos que em negócios, tempo é dinheiro.", "icon": "clock"},
+    {"title": "Atendimento próximo", "desc": "Consultores reais prontos para resolver, no WhatsApp ou presencialmente.", "icon": "users"}
+  ]'::jsonb;
 
 -- =========================================================================
 -- 8. Tabela de Leads / Pedidos de Orçamento
