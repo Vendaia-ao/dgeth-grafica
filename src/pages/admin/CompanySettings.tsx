@@ -472,19 +472,18 @@ const CompanySettings = () => {
                 
                 {/* Preview */}
                 <div className="md:col-span-5 flex flex-col items-center justify-center">
-                  <div className="relative w-full h-44 rounded-lg overflow-hidden border border-slate-800 bg-slate-900 shadow-inner group">
+                  <div className="relative w-full rounded-lg overflow-hidden border border-slate-800 bg-slate-900 shadow-inner group p-2.5 flex flex-col items-center justify-center min-h-[160px]">
                     <img
                       src={whyChooseImage || '/imgs/portifolio/port (9).jpg'}
                       alt="Pré-visualização"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-auto max-h-48 object-contain rounded group-hover:scale-[1.02] transition-transform duration-300"
                       onError={(e) => {
                         // fallback se a imagem falhar
                         (e.target as HTMLImageElement).src = '/imgs/portifolio/port (9).jpg';
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
-                    <span className="absolute bottom-2 left-2 text-[11px] font-medium text-white/90 bg-black/60 px-2 py-0.5 rounded backdrop-blur-sm">
-                      Pré-visualização
+                    <span className="mt-2 text-[11px] font-medium text-slate-400 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800/80">
+                      Pré-visualização (completa)
                     </span>
                   </div>
                 </div>
@@ -536,9 +535,6 @@ const CompanySettings = () => {
                       Repor Imagem Padrão
                     </Button>
                   </div>
-                  <p className="text-xs text-slate-500">
-                    A imagem é enviada para o storage do Supabase e optimizada para a secção.
-                  </p>
                 </div>
               </div>
             </div>

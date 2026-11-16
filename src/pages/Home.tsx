@@ -815,12 +815,12 @@ const DifferentialsSection = () => {
               ))}
             </div>
           </div>
-          <div className={`relative h-[300px] sm:h-[350px] md:h-[400px] scroll-animate-init reveal-scale ${isVisible ? 'animate-active' : ''}`} style={{ transitionDelay: '200ms' }}>
-            <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-ns-blue rounded-2xl transform rotate-3 animate-float-random opacity-20" />
-            <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-slate-900 rounded-2xl transform -rotate-2 overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-0 hover:scale-105">
+          <div className={`relative flex items-center justify-center scroll-animate-init reveal-scale ${isVisible ? 'animate-active' : ''}`} style={{ transitionDelay: '200ms' }}>
+            <div className="absolute inset-0 bg-ns-blue rounded-2xl transform rotate-2 animate-float-random opacity-20 -z-10" />
+            <div className="relative w-full rounded-2xl bg-slate-900 border border-slate-800/80 p-2 sm:p-3 overflow-hidden shadow-2xl transition-transform duration-700 hover:rotate-0 hover:scale-[1.02]">
               <img
                 src={image}
-                className="w-full h-full object-cover opacity-80"
+                className="w-full h-auto max-h-[550px] object-contain rounded-xl mx-auto block shadow-sm"
                 alt={title}
               />
             </div>
